@@ -865,9 +865,9 @@
     </div>
     
     <!-- CHECKOUT MODAL -->
-    <div id="checkout-modal" class="fixed inset-0 z-[200] hidden">
+    <div id="checkout-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center">
         <div class="absolute inset-0 bg-virtue-deepPurple/60 backdrop-blur-sm transition-opacity" onclick="closeCheckout()"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-full max-w-lg p-10 rounded-xl shadow-2xl animate-fade-in-up border border-white/50">
+        <div class="bg-white w-full max-w-lg mx-4 p-10 rounded-xl shadow-2xl animate-fade-in-up border border-white/50 relative z-10">
             <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
                 <h3 class="font-serif text-3xl text-virtue-deepPurple">Secure Checkout</h3>
                 <button onclick="closeCheckout()" class="text-gray-400 hover:text-red-500 transition-colors"><i class="fas fa-times text-xl"></i></button>

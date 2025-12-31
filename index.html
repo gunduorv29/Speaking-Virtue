@@ -14,7 +14,7 @@
     <!-- Fonts: High-End Editorial Selection -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,13 +26,16 @@
                     colors: {
                         virtue: {
                             purple: '#4B2E83',    /* Brand Primary */
+                            deepPurple: '#2E1A55',
                             burgundy: '#8B1538',  /* Brand Secondary */
                             accent: '#6B3FA0',    /* Brand Accent */
-                            black: '#121212',
+                            gold: '#D4AF37',      /* New Accent */
+                            black: '#0a0a0a',
                             charcoal: '#2D2D2D',
-                            grey: '#8A8A8A',
-                            light: '#F9F8F6',
+                            grey: '#666666',
+                            light: '#F5F2EB',     /* Warm Paper Tone */
                             white: '#FFFFFF',
+                            surface: '#ffffff',
                         }
                     },
                     fontFamily: {
@@ -40,16 +43,27 @@
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     },
                     backgroundImage: {
-                        'brand-gradient': 'linear-gradient(to right, #4B2E83, #8B1538)',
-                        'brand-gradient-hover': 'linear-gradient(to right, #3a226b, #70102d)',
+                        'brand-gradient': 'linear-gradient(135deg, #4B2E83 0%, #8B1538 100%)',
+                        'brand-gradient-hover': 'linear-gradient(135deg, #3a226b 0%, #70102d 100%)',
+                        'soft-glow': 'radial-gradient(circle at 50% 50%, rgba(75, 46, 131, 0.08) 0%, rgba(255, 255, 255, 0) 70%)',
+                    },
+                    boxShadow: {
+                        'soft': '0 20px 40px -15px rgba(75, 46, 131, 0.15)',
+                        'glow': '0 0 20px rgba(75, 46, 131, 0.3)',
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'spin-slow': 'spin 12s linear infinite',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -57,104 +71,202 @@
         }
     </script>
     <style>
+        /* Base Setup */
         body {
-            background-color: #FFFFFF;
+            background-color: #F9F8F6; /* Soft Cream */
             color: #121212;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Noise Texture Overlay for "Paper" Feel */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
         
-        /* Hide pages by default */
+        /* Page Transitions */
         .page-view {
             display: none;
             min-height: 100vh;
-            padding-top: 80px; /* Space for fixed navbar */
+            padding-top: 90px;
             opacity: 0;
-            transition: opacity 0.4s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
         }
         
-        /* Active page class */
         .page-view.active {
             display: block;
             opacity: 1;
+            animation: fadeInPage 0.6s ease-out forwards;
         }
 
-        /* Image hover effects */
-        .img-zoom {
-            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .group:hover .img-zoom {
-            transform: scale(1.05);
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Text Gradient Utility */
+        /* Typography Enhancements */
         .text-gradient {
-            background: linear-gradient(to right, #4B2E83, #8B1538);
+            background: linear-gradient(135deg, #4B2E83, #8B1538);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #D4AF37, #8B1538);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Image Hover Effects */
+        .img-container {
+            overflow: hidden;
+        }
+        .img-zoom {
+            transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+        }
+        .group:hover .img-zoom {
+            transform: scale(1.08);
+            filter: contrast(1.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F2EB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B2E83;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B1538;
+        }
+
+        /* Loader */
+        .loader-path {
+            stroke-dasharray: 150, 200;
+            stroke-dashoffset: -10;
+            animation: dash 1.5s ease-in-out infinite, rotate 2s linear infinite;
+            stroke: #4B2E83;
+            stroke-linecap: round;
+        }
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes dash {
+            0% { stroke-dasharray: 1, 200; stroke-dashoffset: 0; }
+            50% { stroke-dasharray: 89, 200; stroke-dashoffset: -35; }
+            100% { stroke-dasharray: 89, 200; stroke-dashoffset: -124; }
+        }
+
+        /* Active/Click States for Virtues */
+        .virtue-card.active {
+            background-color: #4B2E83 !important;
+            color: #FFFFFF !important;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(75, 46, 131, 0.3);
+            border-color: #4B2E83;
+        }
+        .virtue-card.active i, .virtue-card.active h4, .virtue-card.active p {
+            color: #FFFFFF !important;
+        }
+        .virtue-card.active .icon-circle {
+            background-color: rgba(255,255,255,0.2) !important;
+            color: #FFFFFF !important;
         }
     </style>
 </head>
-<body class="font-sans antialiased">
+<body class="font-sans antialiased selection:bg-virtue-purple selection:text-white">
+
+    <!-- Noise Texture -->
+    <div class="noise-overlay"></div>
+
+    <!-- Loading Screen -->
+    <div id="loading-spinner" class="fixed inset-0 bg-[#F9F8F6] z-[101] flex items-center justify-center transition-opacity duration-700">
+        <svg class="w-16 h-16 animate-spin" viewBox="25 25 50 50">
+            <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke-width="2"></circle>
+        </svg>
+    </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-10 right-10 bg-virtue-black text-white px-6 py-4 rounded shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-[100] flex items-center gap-4">
-        <i class="fas fa-check-circle text-virtue-accent"></i>
+    <div id="toast" class="fixed bottom-10 right-6 md:right-10 bg-virtue-deepPurple/95 backdrop-blur-md text-white px-6 py-4 rounded-lg shadow-soft border-l-4 border-virtue-gold transform translate-y-24 opacity-0 transition-all duration-500 z-[100] flex items-center gap-4">
+        <div class="bg-white/10 p-2 rounded-full">
+            <i class="fas fa-check text-virtue-gold"></i>
+        </div>
         <div>
-            <h4 class="font-bold text-sm">Added to Cart</h4>
-            <p class="text-xs text-gray-400">View your selection in the cart.</p>
+            <h4 class="font-serif font-bold text-sm tracking-wide">Added to Cart</h4>
+            <p class="text-xs text-white/70">Excellent choice.</p>
         </div>
     </div>
 
     <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-virtue-light transition-all duration-300 shadow-sm">
+    <nav class="fixed w-full z-50 bg-white/70 backdrop-blur-xl border-b border-virtue-purple/5 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center h-20">
+            <div class="flex justify-between items-center h-20 md:h-24">
+                
                 <!-- Brand / Logo -->
-                <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3 group">
-                    <img src="243877296_264459022244026_4682802749916432585_n.jpg" alt="Speaking Virtue Logo" class="w-8 h-8 rounded-sm shadow-md group-hover:shadow-lg transition-all object-cover">
-                    <span class="font-serif text-2xl font-bold tracking-tight text-gradient">Speaking Virtue</span>
+                <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3 group relative z-50">
+                    <img src="243877296_264459022244026_4682802749916432585_n.jpg" alt="Speaking Virtue Logo" class="w-10 h-10 rounded-sm shadow-md group-hover:shadow-lg transition-all object-cover">
+                    <span class="font-serif text-2xl font-bold tracking-tight text-virtue-deepPurple group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-brand-gradient transition-all duration-300">Speaking Virtue</span>
                 </a>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-10">
-                    <button onclick="navigateTo('home')" class="text-xs font-bold uppercase tracking-widest hover:text-virtue-purple transition-colors relative group">
+                <div class="hidden md:flex items-center space-x-12">
+                    <button onclick="navigateTo('home')" class="nav-link text-xs font-bold uppercase tracking-[0.2em] text-virtue-charcoal hover:text-virtue-purple transition-colors relative group py-2">
                         Home
-                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-virtue-purple transition-all group-hover:w-full"></span>
+                        <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-gradient transition-all duration-300 group-hover:w-full"></span>
                     </button>
-                    <button onclick="navigateTo('shop')" class="text-xs font-bold uppercase tracking-widest hover:text-virtue-purple transition-colors relative group">
-                        Shop
-                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-virtue-purple transition-all group-hover:w-full"></span>
-                    </button>
-                    <button onclick="navigateTo('articles')" class="text-xs font-bold uppercase tracking-widest hover:text-virtue-purple transition-colors relative group">
-                        Articles
-                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-virtue-purple transition-all group-hover:w-full"></span>
-                    </button>
-                    <button onclick="navigateTo('about')" class="text-xs font-bold uppercase tracking-widest hover:text-virtue-purple transition-colors relative group">
+                    <button onclick="navigateTo('about')" class="nav-link text-xs font-bold uppercase tracking-[0.2em] text-virtue-charcoal hover:text-virtue-purple transition-colors relative group py-2">
                         About
-                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-virtue-purple transition-all group-hover:w-full"></span>
+                        <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-gradient transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="navigateTo('articles')" class="nav-link text-xs font-bold uppercase tracking-[0.2em] text-virtue-charcoal hover:text-virtue-purple transition-colors relative group py-2">
+                        Journal
+                        <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-gradient transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="navigateTo('shop')" class="nav-link text-xs font-bold uppercase tracking-[0.2em] text-virtue-charcoal hover:text-virtue-purple transition-colors relative group py-2">
+                        Shop
+                        <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-gradient transition-all duration-300 group-hover:w-full"></span>
                     </button>
                 </div>
 
                 <!-- Right Actions -->
-                <div class="flex items-center gap-6">
-                    <a href="https://www.instagram.com/speaking_virtue/" target="_blank" aria-label="Visit our Instagram page" class="text-lg hover:text-virtue-burgundy transition-colors transform hover:scale-110"><i class="fab fa-instagram"></i></a>
-                    <button onclick="navigateTo('cart')" aria-label="Open shopping cart" class="relative group transform hover:scale-110 transition-transform">
-                        <i class="fas fa-shopping-bag text-lg group-hover:text-virtue-purple transition-colors"></i>
-                        <span id="cart-badge" class="absolute -top-1 -right-2 bg-brand-gradient text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full opacity-0 transition-opacity">0</span>
+                <div class="flex items-center gap-8 relative z-50">
+                    <a href="https://www.instagram.com/speaking_virtue/" target="_blank" aria-label="Instagram" class="text-lg text-virtue-charcoal hover:text-virtue-burgundy transition-all transform hover:-translate-y-1 hover:rotate-6"><i class="fab fa-instagram"></i></a>
+                    
+                    <button onclick="navigateTo('cart')" aria-label="Cart" class="relative group transform hover:scale-105 transition-transform">
+                        <i class="fas fa-shopping-bag text-lg text-virtue-charcoal group-hover:text-virtue-purple transition-colors"></i>
+                        <span id="cart-badge" class="absolute -top-2 -right-2 bg-virtue-burgundy text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full opacity-0 shadow-sm transition-all duration-300 font-bold">0</span>
                     </button>
-                    <button class="md:hidden text-lg" aria-label="Open mobile menu" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                    
+                    <!-- Mobile Hamburger -->
+                    <button class="md:hidden text-lg text-virtue-charcoal hover:text-virtue-purple transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
             </div>
         </div>
+        
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-virtue-light">
-            <div class="flex flex-col p-6 space-y-4">
-                <button onclick="navigateTo('home'); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left font-serif text-xl text-virtue-purple">Home</button>
-                <button onclick="navigateTo('shop'); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left font-serif text-xl text-virtue-purple">Shop</button>
-                <button onclick="navigateTo('articles'); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left font-serif text-xl text-virtue-purple">Articles</button>
-                <button onclick="navigateTo('cart'); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left font-serif text-xl text-virtue-purple">Cart</button>
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 border-b border-virtue-purple/10 backdrop-blur-md">
+            <div class="flex flex-col p-8 space-y-6 text-center">
+                <button onclick="navigateTo('home'); document.getElementById('mobile-menu').classList.add('hidden')" class="font-serif text-2xl text-virtue-deepPurple hover:text-virtue-burgundy hover:italic transition-all">Home</button>
+                <button onclick="navigateTo('about'); document.getElementById('mobile-menu').classList.add('hidden')" class="font-serif text-2xl text-virtue-deepPurple hover:text-virtue-burgundy hover:italic transition-all">About</button>
+                <button onclick="navigateTo('articles'); document.getElementById('mobile-menu').classList.add('hidden')" class="font-serif text-2xl text-virtue-deepPurple hover:text-virtue-burgundy hover:italic transition-all">Journal</button>
+                <button onclick="navigateTo('shop'); document.getElementById('mobile-menu').classList.add('hidden')" class="font-serif text-2xl text-virtue-deepPurple hover:text-virtue-burgundy hover:italic transition-all">Shop</button>
+                <button onclick="navigateTo('cart'); document.getElementById('mobile-menu').classList.add('hidden')" class="font-serif text-2xl text-virtue-deepPurple hover:text-virtue-burgundy hover:italic transition-all">Cart</button>
             </div>
         </div>
     </nav>
@@ -164,127 +276,233 @@
     <!-- ========================================= -->
     <div id="home" class="page-view active">
         <!-- Hero Section -->
-        <header class="relative h-screen flex items-center bg-virtue-light overflow-hidden">
-            <div class="absolute inset-0 flex">
-                <div class="w-full lg:w-1/2 bg-virtue-light z-10"></div>
-                <div class="hidden lg:block w-1/2 bg-gray-200 relative overflow-hidden" data-aos="fade-left" data-aos-duration="1500">
-                    <img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale opacity-90 mix-blend-multiply scale-110 animate-float" alt="Classical Sculpture">
-                    <div class="absolute inset-0 bg-virtue-purple/10 mix-blend-overlay"></div>
-                </div>
-            </div>
-            
-            <div class="relative z-20 max-w-7xl mx-auto px-6 w-full h-full flex items-center">
-                <div class="max-w-2xl" data-aos="fade-up" data-aos-duration="1000">
-                    <span class="inline-block border-b border-virtue-purple pb-1 mb-6 text-xs font-bold uppercase tracking-widest text-virtue-purple">Est. 2025 • The Order</span>
-                    <h1 class="font-serif text-6xl md:text-8xl text-virtue-black mb-8 leading-[0.9]">
-                        Wisdom <br>
-                        <span class="italic text-gradient">in Practice.</span>
+        <header class="relative min-h-[90vh] flex items-center overflow-hidden">
+            <!-- Ambient Background Blobs -->
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-virtue-purple/10 rounded-full blur-[100px] animate-float"></div>
+            <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-virtue-burgundy/5 rounded-full blur-[120px] animate-float" style="animation-delay: 2s;"></div>
+
+            <div class="max-w-7xl mx-auto px-6 w-full relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Text Content -->
+                <div class="order-2 lg:order-1" data-aos="fade-up" data-aos-duration="1000">
+                    <div class="inline-flex items-center gap-2 border border-virtue-purple/20 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full mb-8 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-gradient animate-pulse"></span>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-virtue-purple">Welcome to Speaking Virtue</span>
+                    </div>
+                    
+                    <h1 class="font-serif text-6xl md:text-7xl lg:text-8xl text-virtue-black mb-8 leading-[0.95] tracking-tight">
+                        Truth Spoken. <br>
+                        <span class="text-virtue-charcoal">Virtue Lived.</span> <br>
+                        <span class="italic text-gradient pr-2">Love Revealed.</span>
                     </h1>
-                    <p class="text-lg text-virtue-charcoal mb-10 max-w-md leading-relaxed">
-                        A curated digital space for philosophy, culture, and products designed to elevate the modern mind.
+                    
+                    <p class="text-lg md:text-xl text-virtue-grey mb-10 max-w-lg leading-relaxed font-light">
+                        Speaking Virtue is a Catholic organisation dedicated to the spiritual, moral, and intellectual formation of the human person.
                     </p>
-                    <div class="flex gap-4">
-                        <button onclick="navigateTo('shop')" class="px-8 py-4 bg-brand-gradient text-white text-xs font-bold uppercase tracking-widest hover:bg-brand-gradient-hover shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                            View Collection
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="navigateTo('shop')" class="group relative px-8 py-4 bg-virtue-deepPurple text-white text-xs font-bold uppercase tracking-widest overflow-hidden rounded-sm shadow-soft hover:shadow-glow transition-all duration-300">
+                            <span class="relative z-10 group-hover:text-white transition-colors">Explore Resources</span>
+                            <div class="absolute inset-0 bg-brand-gradient transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
                         </button>
-                        <button onclick="navigateTo('articles')" class="px-8 py-4 border border-virtue-purple text-virtue-purple text-xs font-bold uppercase tracking-widest hover:bg-virtue-purple hover:text-white transition-all duration-300">
-                            Read Journal
+                        
+                        <button onclick="navigateTo('articles')" class="group px-8 py-4 border border-virtue-purple/30 text-virtue-purple text-xs font-bold uppercase tracking-widest hover:border-virtue-purple hover:bg-white transition-all duration-300 rounded-sm">
+                            <span class="group-hover:translate-x-1 inline-block transition-transform">Read Journal &rarr;</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="order-1 lg:order-2 relative h-[50vh] lg:h-[70vh]" data-aos="fade-left" data-aos-duration="1200">
+                    <div class="absolute inset-4 border border-virtue-purple/10 rounded-full animate-spin-slow"></div>
+                    <div class="w-full h-full rounded-tl-[100px] rounded-br-[100px] overflow-hidden shadow-2xl relative">
+                        <img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale opacity-90 hover:scale-105 transition-transform duration-[2s]" alt="Classical Sculpture">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-virtue-purple/30 to-transparent mix-blend-overlay"></div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- The Three Pillars -->
-        <section class="py-24 bg-white relative">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-16" data-aos="fade-up">
-                    <h2 class="font-serif text-4xl text-virtue-black mb-4">The Three Pillars</h2>
-                    <div class="w-16 h-1 bg-brand-gradient mx-auto"></div>
+        <!-- Why Virtue Matters (Pillars) -->
+        <section class="py-32 bg-white relative overflow-hidden">
+            <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+            
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="text-center mb-20" data-aos="fade-up">
+                    <h2 class="font-serif text-4xl md:text-5xl text-virtue-black mb-6">Why Virtue Matters Today</h2>
+                    <div class="w-24 h-[1px] bg-brand-gradient mx-auto mb-8"></div>
+                    <p class="max-w-3xl mx-auto text-virtue-grey text-lg leading-relaxed font-light">
+                        In an age marked by moral relativism, Speaking Virtue exists as a steady and faithful voice. Virtue is the discipline that orders desire, strengthens the will, and aligns human freedom with divine wisdom.
+                    </p>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                    <div class="p-8 hover:bg-virtue-light transition-colors duration-500 rounded-sm" data-aos="fade-up" data-aos-delay="100">
-                        <div class="text-4xl text-virtue-purple mb-6"><i class="fas fa-brain"></i></div>
-                        <h3 class="font-serif text-2xl mb-4">Wisdom</h3>
-                        <p class="text-virtue-grey leading-relaxed">Knowledge applied through experience. We seek truth in ancient texts and modern science alike.</p>
+
+                <!-- Theological Virtues (Clickable & Hoverable) -->
+                <div class="mb-24">
+                    <div class="flex items-center gap-4 mb-10 justify-center">
+                        <span class="h-[1px] w-12 bg-virtue-purple/20"></span>
+                        <h3 class="font-serif text-2xl italic text-virtue-charcoal">The Theological Virtues</h3>
+                        <span class="h-[1px] w-12 bg-virtue-purple/20"></span>
                     </div>
-                    <div class="p-8 hover:bg-virtue-light transition-colors duration-500 rounded-sm" data-aos="fade-up" data-aos-delay="200">
-                        <div class="text-4xl text-virtue-burgundy mb-6"><i class="fas fa-balance-scale"></i></div>
-                        <h3 class="font-serif text-2xl mb-4">Justice</h3>
-                        <p class="text-virtue-grey leading-relaxed">Acting with fairness and integrity. To treat others with the dignity inherent to the human condition.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Card 1 -->
+                        <div class="virtue-card group p-10 bg-virtue-light rounded-xl hover:bg-white hover:shadow-soft transition-all duration-300 border border-transparent hover:border-virtue-purple/10 text-center cursor-pointer" onclick="this.classList.toggle('active')" data-aos="fade-up" data-aos-delay="0">
+                            <div class="icon-circle w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-2xl text-virtue-purple mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fas fa-praying-hands"></i>
+                            </div>
+                            <h4 class="font-serif text-2xl mb-3 text-virtue-deepPurple">Faith</h4>
+                            <p class="text-virtue-grey text-sm leading-relaxed">Orienting the intellect toward God.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="virtue-card group p-10 bg-virtue-light rounded-xl hover:bg-white hover:shadow-soft transition-all duration-300 border border-transparent hover:border-virtue-purple/10 text-center cursor-pointer" onclick="this.classList.toggle('active')" data-aos="fade-up" data-aos-delay="100">
+                            <div class="icon-circle w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-2xl text-virtue-burgundy mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fas fa-dove"></i>
+                            </div>
+                            <h4 class="font-serif text-2xl mb-3 text-virtue-deepPurple">Hope</h4>
+                            <p class="text-virtue-grey text-sm leading-relaxed">Orienting the will toward God as our happiness.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="virtue-card group p-10 bg-virtue-light rounded-xl hover:bg-white hover:shadow-soft transition-all duration-300 border border-transparent hover:border-virtue-purple/10 text-center cursor-pointer" onclick="this.classList.toggle('active')" data-aos="fade-up" data-aos-delay="200">
+                            <div class="icon-circle w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-2xl text-virtue-accent mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h4 class="font-serif text-2xl mb-3 text-virtue-deepPurple">Charity</h4>
+                            <p class="text-virtue-grey text-sm leading-relaxed">Union with God through love.</p>
+                        </div>
                     </div>
-                    <div class="p-8 hover:bg-virtue-light transition-colors duration-500 rounded-sm" data-aos="fade-up" data-aos-delay="300">
-                        <div class="text-4xl text-virtue-accent mb-6"><i class="fas fa-shield-alt"></i></div>
-                        <h3 class="font-serif text-2xl mb-4">Courage</h3>
-                        <p class="text-virtue-grey leading-relaxed">The willingness to act despite fear. Physical bravery is rare; moral bravery is essential.</p>
+                </div>
+
+                <!-- Cardinal Virtues (Clickable & Hoverable) -->
+                <div>
+                    <div class="flex items-center gap-4 mb-10 justify-center">
+                        <span class="h-[1px] w-12 bg-virtue-purple/20"></span>
+                        <h3 class="font-serif text-2xl italic text-virtue-charcoal">The Cardinal Virtues</h3>
+                        <span class="h-[1px] w-12 bg-virtue-purple/20"></span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="virtue-card p-8 border border-virtue-purple/10 rounded-lg hover:border-virtue-purple/30 hover:bg-white/50 transition-colors text-center cursor-pointer" onclick="this.classList.toggle('active')" data-aos="fade-up">
+                            <i class="fas fa-brain text-3xl text-virtue-purple mb-4 opacity-80"></i>
+                            <h4 class="font-serif text-xl mb-2">Prudence</h4>
+                            <p class="text-xs uppercase tracking-widest text-virtue-grey">Ordering Moral Life</p>
+                        </div>
+                        <div class="virtue-card p-8 border border-virtue-burgundy/10 rounded-lg hover:border-virtue-burgundy/30 hover:bg-white/50 transition-colors text-center cursor-pointer" onclick="this.classList.toggle('active')" data-aos="fade-up" data-aos-delay="100">
+                            <i class="fas fa-balance-scale text-3xl text-virtue-burgundy mb-4 opacity-80"></i>
+                            <h4 class="font-serif text-xl mb-2">Justice</h4>
+                            <p class="text-xs uppercase tracking-widest text-virtue-grey">Giving What Is Due</p>
+                        </div>
+                        <div class="virtue-card p-8 border border-virtue-accent/10 rounded-lg hover:border-virtue-accent/30 hover:bg-white/50 transition-colors text-center cursor-pointer" onclick="this.classList.toggle('active')" data-aos="fade-up" data-aos-delay="200">
+                            <i class="fas fa-shield-alt text-3xl text-virtue-accent mb-4 opacity-80"></i>
+                            <h4 class="font-serif text-xl mb-2">Fortitude</h4>
+                            <p class="text-xs uppercase tracking-widest text-virtue-grey">Courage In Difficulty</p>
+                        </div>
+                        <div class="virtue-card p-8 border border-virtue-purple/10 rounded-lg hover:border-virtue-purple/30 hover:bg-white/50 transition-colors text-center cursor-pointer" onclick="this.classList.toggle('active')" data-aos="fade-up" data-aos-delay="300">
+                            <i class="fas fa-hand-holding-heart text-3xl text-virtue-purple mb-4 opacity-80"></i>
+                            <h4 class="font-serif text-xl mb-2">Temperance</h4>
+                            <p class="text-xs uppercase tracking-widest text-virtue-grey">Moderation of Pleasure</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Parallax Quote -->
-        <section class="py-32 bg-fixed bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
-            <div class="absolute inset-0 bg-virtue-black/70"></div>
-            <div class="relative z-10 max-w-4xl mx-auto px-6 text-center text-white" data-aos="zoom-in">
-                <i class="fas fa-quote-left text-4xl text-virtue-purple mb-8 opacity-50"></i>
-                <h2 class="font-serif text-4xl md:text-5xl leading-tight mb-8">
-                    "Waste no more time arguing about what a good man should be. Be one."
+        <section class="py-40 bg-fixed bg-cover bg-center relative group" style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
+            <div class="absolute inset-0 bg-virtue-deepPurple/80 transition-opacity duration-700 group-hover:opacity-70"></div>
+            <div class="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
+                <i class="fas fa-quote-left text-5xl text-virtue-gold mb-10 opacity-60"></i>
+                <h2 class="font-serif text-4xl md:text-6xl leading-tight mb-10 drop-shadow-lg">
+                    "No greater joy can I have than this, to hear that my children follow the truth."
                 </h2>
-                <p class="text-virtue-grey uppercase tracking-widest text-sm">— Marcus Aurelius</p>
+                <div class="flex items-center justify-center gap-4">
+                    <span class="h-[1px] w-8 bg-white/50"></span>
+                    <p class="text-white/80 uppercase tracking-[0.3em] text-sm font-bold">3 John 1:4</p>
+                    <span class="h-[1px] w-8 bg-white/50"></span>
+                </div>
             </div>
         </section>
 
-        <!-- Featured Products -->
-        <section class="py-24 bg-virtue-light">
+        <!-- What You Will Find Here -->
+        <section class="py-32 bg-[#F5F2EB]">
             <div class="max-w-7xl mx-auto px-6">
-                <div class="flex justify-between items-end mb-16" data-aos="fade-right">
-                    <h2 class="font-serif text-4xl text-virtue-black">Curated Goods</h2>
-                    <button onclick="navigateTo('shop')" class="text-xs font-bold uppercase tracking-widest border-b border-virtue-grey pb-1 hover:border-virtue-purple hover:text-virtue-purple transition-all">View All</button>
+                <div class="flex flex-col md:flex-row justify-between items-end mb-20">
+                    <div class="w-full md:w-1/2">
+                        <span class="text-virtue-accent font-bold uppercase tracking-widest text-xs mb-4 block">Our Offerings</span>
+                        <h2 class="font-serif text-4xl md:text-5xl text-virtue-black mb-8">Curated for the Soul</h2>
+                        <div class="space-y-4 text-virtue-charcoal font-light text-lg">
+                            <p class="flex items-center"><i class="fas fa-check-circle text-virtue-purple mr-4 opacity-70"></i> In-depth Articles grounded in Tradition</p>
+                            <p class="flex items-center"><i class="fas fa-check-circle text-virtue-purple mr-4 opacity-70"></i> Creative Expressions of faith</p>
+                            <p class="flex items-center"><i class="fas fa-check-circle text-virtue-purple mr-4 opacity-70"></i> Formational Resources</p>
+                            <p class="flex items-center"><i class="fas fa-check-circle text-virtue-purple mr-4 opacity-70"></i> A Faithful Community</p>
+                        </div>
+                    </div>
+                    <button onclick="navigateTo('shop')" class="hidden md:block group mt-8 md:mt-0 text-xs font-bold uppercase tracking-widest text-virtue-charcoal hover:text-virtue-purple transition-colors">
+                        View Resources <span class="inline-block transition-transform group-hover:translate-x-1 ml-2">&rarr;</span>
+                    </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    <!-- Product Card 1 -->
+                <!-- Featured Products Preview -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Product 1 -->
                     <div class="group cursor-pointer" onclick="navigateTo('shop')" data-aos="fade-up" data-aos-delay="0">
-                        <div class="bg-white p-6 aspect-[3/4] overflow-hidden mb-6 relative shadow-sm hover:shadow-2xl transition-all duration-500">
-                            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 img-zoom" alt="Book">
+                        <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
+                            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Book">
+                            <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
+                            <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                                <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
+                            </div>
                         </div>
-                        <h3 class="font-serif text-xl mb-1 group-hover:text-virtue-purple transition-colors">Speaking Virtue: Vol I</h3>
-                        <p class="text-sm text-virtue-grey font-medium">$45.00</p>
+                        <h3 class="font-serif text-2xl mb-2 group-hover:text-virtue-purple transition-colors">Speaking Virtue: Vol I</h3>
+                        <p class="text-sm text-virtue-grey font-medium uppercase tracking-wide">Resources</p>
                     </div>
 
-                    <!-- Product Card 2 -->
+                    <!-- Product 2 -->
                     <div class="group cursor-pointer" onclick="navigateTo('shop')" data-aos="fade-up" data-aos-delay="100">
-                        <div class="bg-white p-6 aspect-[3/4] overflow-hidden mb-6 relative shadow-sm hover:shadow-2xl transition-all duration-500">
-                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 img-zoom" alt="Journal">
+                        <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
+                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Journal">
+                            <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
+                             <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                                <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
+                            </div>
                         </div>
-                        <h3 class="font-serif text-xl mb-1 group-hover:text-virtue-purple transition-colors">The Daily Stoic Journal</h3>
-                        <p class="text-sm text-virtue-grey font-medium">$32.00</p>
+                        <h3 class="font-serif text-2xl mb-2 group-hover:text-virtue-purple transition-colors">The Daily Stoic Journal</h3>
+                        <p class="text-sm text-virtue-grey font-medium uppercase tracking-wide">Formation</p>
                     </div>
 
-                    <!-- Product Card 3 -->
+                    <!-- Product 3 -->
                     <div class="group cursor-pointer" onclick="navigateTo('shop')" data-aos="fade-up" data-aos-delay="200">
-                        <div class="bg-white p-6 aspect-[3/4] overflow-hidden mb-6 relative shadow-sm hover:shadow-2xl transition-all duration-500">
-                            <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 img-zoom" alt="Tee">
+                        <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
+                            <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Tee">
+                            <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
+                             <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                                <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
+                            </div>
                         </div>
-                        <h3 class="font-serif text-xl mb-1 group-hover:text-virtue-purple transition-colors">Heavyweight Virtue Tee</h3>
-                        <p class="text-sm text-virtue-grey font-medium">$40.00</p>
+                        <h3 class="font-serif text-2xl mb-2 group-hover:text-virtue-purple transition-colors">Visual Arts Tee</h3>
+                        <p class="text-sm text-virtue-grey font-medium uppercase tracking-wide">Expressions</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Newsletter Section -->
-        <section class="py-24 bg-brand-gradient text-white text-center">
-            <div class="max-w-2xl mx-auto px-6" data-aos="fade-up">
-                <i class="fas fa-envelope-open-text text-4xl text-white/30 mb-6"></i>
-                <h2 class="font-serif text-4xl mb-6">Join the Order</h2>
-                <p class="text-white/80 mb-10 leading-relaxed">
-                    Subscribe to receive our weekly dispatch on philosophy, art, and the pursuit of excellence.
+        <section class="py-32 bg-virtue-deepPurple relative overflow-hidden">
+             <!-- Abstract Shapes -->
+             <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
+                 <div class="absolute -top-24 -left-24 w-96 h-96 bg-virtue-burgundy rounded-full blur-[80px]"></div>
+                 <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-virtue-purple rounded-full blur-[100px]"></div>
+             </div>
+
+            <div class="max-w-2xl mx-auto px-6 text-center relative z-10" data-aos="fade-up">
+                <div class="w-16 h-16 mx-auto bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-2xl text-white mb-8">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white mb-6">Join the Order</h2>
+                <p class="text-white/70 mb-10 leading-relaxed text-lg font-light">
+                    Subscribe to receive our weekly dispatch on philosophy, art, and the pursuit of excellence. No spam, only substance.
                 </p>
-                <form class="flex flex-col sm:flex-row gap-4" onsubmit="event.preventDefault(); alert('Subscribed!')">
-                    <input type="email" placeholder="Email Address" class="w-full bg-white/10 border border-white/20 px-6 py-4 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 focus:border-white transition-colors">
-                    <button type="submit" class="px-10 py-4 bg-white text-virtue-purple font-bold uppercase tracking-widest text-xs hover:bg-virtue-light transition-colors shadow-lg">
+                <form class="flex flex-col sm:flex-row gap-4 p-2 bg-white/5 rounded-lg border border-white/10" onsubmit="event.preventDefault(); alert('Subscribed!')">
+                    <input type="email" placeholder="Email Address" class="w-full bg-transparent border-none px-6 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-0">
+                    <button type="submit" class="px-10 py-4 bg-white text-virtue-deepPurple font-bold uppercase tracking-widest text-xs hover:bg-virtue-gold transition-colors shadow-lg rounded-md">
                         Subscribe
                     </button>
                 </form>
@@ -293,160 +511,151 @@
     </div>
 
     <!-- ========================================= -->
-    <!-- PAGE 2: SHOP (Store) -->
+    <!-- PAGE 2: SHOP -->
     <!-- ========================================= -->
     <div id="shop" class="page-view">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <div class="text-center mb-16 pt-10" data-aos="fade-down">
-                <h1 class="font-serif text-5xl mb-4 text-virtue-black">The Collection</h1>
-                <p class="text-virtue-grey max-w-xl mx-auto">Tools and artifacts designed to remind you of what matters.</p>
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <span class="text-virtue-accent font-bold uppercase tracking-widest text-xs mb-4 block">Our Collection</span>
+                <h1 class="font-serif text-5xl md:text-6xl text-virtue-black mb-6">Formational Resources</h1>
+                <div class="w-24 h-[1px] bg-brand-gradient mx-auto mb-8"></div>
+                <p class="max-w-2xl mx-auto text-virtue-grey text-lg leading-relaxed font-light">
+                    Curated tools for spiritual, moral, and intellectual growth. Each item is designed to foster virtue and deepen understanding.
+                </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
-                <!-- Sidebar Filters -->
-                <div class="hidden md:block space-y-8 sticky top-24 h-fit" data-aos="fade-right">
-                    <div>
-                        <h3 class="font-bold text-xs uppercase tracking-widest mb-4 text-virtue-purple">Search</h3>
-                        <input type="text" id="shop-search" placeholder="Search products..." class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-virtue-purple">
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Product 1 -->
+                <div class="group cursor-pointer" onclick="addToCart(1, 'Speaking Virtue: Vol I', 29.99, 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="0">
+                    <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Book">
+                        <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                            <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Add to Cart</span>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-xs uppercase tracking-widest mb-4 text-virtue-purple">Categories</h3>
-                        <ul class="space-y-3 text-sm text-virtue-charcoal">
-                            <li class="cursor-pointer font-medium text-virtue-purple border-l-2 border-virtue-purple pl-2">All Products</li>
-                            <li class="cursor-pointer text-virtue-grey hover:text-virtue-purple transition-colors pl-2 border-l-2 border-transparent hover:border-virtue-grey">Books</li>
-                            <li class="cursor-pointer text-virtue-grey hover:text-virtue-purple transition-colors pl-2 border-l-2 border-transparent hover:border-virtue-grey">Apparel</li>
-                            <li class="cursor-pointer text-virtue-grey hover:text-virtue-purple transition-colors pl-2 border-l-2 border-transparent hover:border-virtue-grey">Digital</li>
-                        </ul>
+                    <h3 class="font-serif text-2xl mb-2 group-hover:text-virtue-purple transition-colors">Speaking Virtue: Vol I</h3>
+                    <p class="text-sm text-virtue-grey font-medium uppercase tracking-wide mb-4">Resources</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-serif text-xl text-virtue-purple">$29.99</span>
+                        <button class="px-6 py-2 bg-virtue-deepPurple text-white text-xs font-bold uppercase tracking-widest hover:bg-virtue-burgundy transition-colors rounded-sm">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- Products Grid -->
-                <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    
-                    <!-- Product 1 -->
-                    <div class="group" data-aos="fade-up" data-aos-delay="0">
-                        <div class="bg-gray-100 aspect-[3/4] mb-4 relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Book">
-                            <button onclick="addToCart(1, 'Speaking Virtue Vol. I', 45, 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=200&auto=format&fit=crop')" aria-label="Add Speaking Virtue Vol. I to cart" class="absolute bottom-4 right-4 bg-brand-gradient text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition-all transform translate-y-14 group-hover:translate-y-0">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                <!-- Product 2 -->
+                <div class="group cursor-pointer" onclick="addToCart(2, 'The Daily Stoic Journal', 24.99, 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Journal">
+                        <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                            <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Add to Cart</span>
                         </div>
-                        <h3 class="font-serif text-lg group-hover:text-virtue-purple transition-colors">Speaking Virtue Vol. I</h3>
-                        <p class="text-sm text-virtue-grey">$45.00</p>
                     </div>
-
-                    <!-- Product 2 -->
-                    <div class="group" data-aos="fade-up" data-aos-delay="100">
-                        <div class="bg-gray-100 aspect-[3/4] mb-4 relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Journal">
-                            <button onclick="addToCart(2, 'Daily Stoic Journal', 32, 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=200&auto=format&fit=crop')" aria-label="Add Daily Stoic Journal to cart" class="absolute bottom-4 right-4 bg-brand-gradient text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition-all transform translate-y-14 group-hover:translate-y-0">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <h3 class="font-serif text-lg group-hover:text-virtue-purple transition-colors">Daily Stoic Journal</h3>
-                        <p class="text-sm text-virtue-grey">$32.00</p>
+                    <h3 class="font-serif text-2xl mb-2 group-hover:text-virtue-purple transition-colors">The Daily Stoic Journal</h3>
+                    <p class="text-sm text-virtue-grey font-medium uppercase tracking-wide mb-4">Formation</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-serif text-xl text-virtue-purple">$24.99</span>
+                        <button class="px-6 py-2 bg-virtue-deepPurple text-white text-xs font-bold uppercase tracking-widest hover:bg-virtue-burgundy transition-colors rounded-sm">Add to Cart</button>
                     </div>
-
-                    <!-- Product 3 -->
-                    <div class="group" data-aos="fade-up" data-aos-delay="200">
-                        <div class="bg-gray-100 aspect-[3/4] mb-4 relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Tee">
-                            <button onclick="addToCart(3, 'Virtue Tee - Black', 40, 'https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=200&auto=format&fit=crop')" aria-label="Add Virtue Tee - Black to cart" class="absolute bottom-4 right-4 bg-brand-gradient text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition-all transform translate-y-14 group-hover:translate-y-0">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <h3 class="font-serif text-lg group-hover:text-virtue-purple transition-colors">Virtue Tee - Black</h3>
-                        <p class="text-sm text-virtue-grey">$40.00</p>
-                    </div>
-
-                    <!-- Product 4 -->
-                    <div class="group" data-aos="fade-up" data-aos-delay="300">
-                        <div class="bg-gray-100 aspect-[3/4] mb-4 relative overflow-hidden">
-                            <div class="w-full h-full flex items-center justify-center text-virtue-grey bg-gray-200">
-                                <i class="fas fa-file-pdf text-4xl text-virtue-purple/50"></i>
-                            </div>
-                            <button onclick="addToCart(4, 'Digital Wisdom Pack', 15, null)" aria-label="Add Digital Wisdom Pack to cart" class="absolute bottom-4 right-4 bg-brand-gradient text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition-all transform translate-y-14 group-hover:translate-y-0">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <h3 class="font-serif text-lg group-hover:text-virtue-purple transition-colors">Digital Wisdom Pack</h3>
-                        <p class="text-sm text-virtue-grey">$15.00</p>
-                    </div>
-                    
-                    <!-- Product 5 -->
-                    <div class="group" data-aos="fade-up" data-aos-delay="400">
-                        <div class="bg-gray-100 aspect-[3/4] mb-4 relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1520006403909-838d6b92c22e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Notebook">
-                             <button onclick="addToCart(5, 'Field Notes - Virtue Ed.', 12, 'https://images.unsplash.com/photo-1520006403909-838d6b92c22e?q=80&w=200&auto=format&fit=crop')" aria-label="Add Field Notes - Virtue Ed. to cart" class="absolute bottom-4 right-4 bg-brand-gradient text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition-all transform translate-y-14 group-hover:translate-y-0">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <h3 class="font-serif text-lg group-hover:text-virtue-purple transition-colors">Field Notes - Virtue Ed.</h3>
-                        <p class="text-sm text-virtue-grey">$12.00</p>
-                    </div>
-
-                     <!-- Product 6 -->
-                     <div class="group" data-aos="fade-up" data-aos-delay="500">
-                        <div class="bg-gray-100 aspect-[3/4] mb-4 relative overflow-hidden">
-                             <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Watch">
-                             <button onclick="addToCart(6, 'Memento Mori Watch', 120, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=200&auto=format&fit=crop')" aria-label="Add Memento Mori Watch to cart" class="absolute bottom-4 right-4 bg-brand-gradient text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition-all transform translate-y-14 group-hover:translate-y-0">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <h3 class="font-serif text-lg group-hover:text-virtue-purple transition-colors">Memento Mori Watch</h3>
-                        <p class="text-sm text-virtue-grey">$120.00</p>
-                    </div>
-
                 </div>
-            </div>
-            
-            <!-- Coming Soon -->
-            <div class="mt-20 py-16 bg-virtue-purple text-white text-center" data-aos="fade-up">
-                <p class="text-sm font-bold uppercase tracking-widest mb-4 opacity-70">Coming Winter 2025</p>
-                <h3 class="font-serif text-3xl md:text-5xl">The Stoic Home Collection</h3>
-                <button class="mt-8 px-8 py-3 border border-white hover:bg-white hover:text-virtue-purple transition-all uppercase text-xs font-bold tracking-widest">Join Waitlist</button>
+
+                <!-- Product 3 -->
+                <div class="group cursor-pointer" onclick="addToCart(3, 'Visual Arts Tee', 39.99, 'https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Tee">
+                        <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
+                         <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                            <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2 group-hover:text-virtue-purple transition-colors">Visual Arts Tee</h3>
+                    <p class="text-sm text-virtue-grey font-medium uppercase tracking-wide">Expressions</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-serif text-xl text-virtue-purple">$39.99</span>
+                        <button class="px-6 py-2 bg-virtue-deepPurple text-white text-xs font-bold uppercase tracking-widest hover:bg-virtue-burgundy transition-colors rounded-sm">Add to Cart</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- ========================================= -->
-    <!-- PAGE 3: ARTICLES (Blog) -->
+    <!-- PAGE 3: ARTICLES (JOURNAL) -->
     <!-- ========================================= -->
     <div id="articles" class="page-view">
-        <div class="max-w-5xl mx-auto px-6 py-16">
-            <h1 class="font-serif text-5xl mb-4 text-center text-virtue-black pt-10" data-aos="fade-down">The Journal</h1>
-            <p class="text-center text-virtue-grey mb-16 max-w-2xl mx-auto" data-aos="fade-up">Reflections on philosophy, theology, and the art of living.</p>
-            
-            <div class="mb-12" data-aos="fade-up">
-                <input type="text" id="articles-search" placeholder="Search articles..." class="w-full border border-gray-300 p-4 rounded focus:outline-none focus:border-virtue-purple">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <span class="text-virtue-accent font-bold uppercase tracking-widest text-xs mb-4 block">The Journal</span>
+                <h1 class="font-serif text-5xl md:text-6xl text-virtue-black mb-6">Articles & Reflections</h1>
+                <div class="w-24 h-[1px] bg-brand-gradient mx-auto mb-8"></div>
+                <p class="max-w-2xl mx-auto text-virtue-grey text-lg leading-relaxed font-light">
+                    Thoughtful explorations of philosophy, theology, and the human experience. Each piece is crafted to provoke reflection and inspire virtue.
+                </p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <!-- Featured Article (Full Width) -->
-                <article class="md:col-span-2 border-b border-gray-100 pb-12 cursor-pointer group" data-aos="fade-up">
-                    <div class="aspect-video bg-gray-200 mb-6 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+
+            <!-- Search Bar -->
+            <div class="max-w-md mx-auto mb-16" data-aos="fade-up" data-aos-delay="100">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-virtue-grey"></i>
+                    <input type="text" id="articles-search" placeholder="Search articles..." class="w-full pl-12 pr-4 py-4 border border-virtue-purple/20 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:border-virtue-purple focus:ring-1 focus:ring-virtue-purple transition-all">
+                </div>
+            </div>
+
+            <!-- Articles Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Article 1 -->
+                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="navigateTo('articles')" data-aos="fade-up" data-aos-delay="0">
+                    <div class="aspect-[4/3] mb-6 overflow-hidden rounded-lg bg-gray-100 relative">
+                        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Philosophy">
                     </div>
-                    <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent mb-3 block">Philosophy • Dec 28</span>
-                    <h2 class="font-serif text-4xl mb-4 group-hover:text-virtue-purple transition-colors">The Architecture of Silence</h2>
-                    <p class="text-virtue-charcoal leading-relaxed mb-6 text-lg">In a world that demands constant noise, finding silence is an act of rebellion. We explore how the ancient stoics utilized quiet to build mental fortresses capable of withstanding the chaos of the modern era.</p>
-                    <span class="text-xs font-bold uppercase underline text-virtue-purple decoration-virtue-burgundy">Read Full Essay</span>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Philosophy</span>
+                        <span class="text-virtue-grey">•</span>
+                        <span class="text-xs text-virtue-grey">5 min read</span>
+                    </div>
+                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">The Virtue of Prudence in Modern Life</h2>
+                    <p class="text-virtue-grey leading-relaxed mb-6">Exploring how the cardinal virtue of prudence guides decision-making in an age of information overload and moral complexity.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read More</span>
+                        <i class="fas fa-arrow-right text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
+                    </div>
                 </article>
 
                 <!-- Article 2 -->
-                <article class="border-b border-gray-100 pb-12 cursor-pointer group" data-aos="fade-up" data-aos-delay="100">
-                    <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent mb-3 block">Culture • Dec 20</span>
-                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Digital Fasting in 2025</h2>
-                    <p class="text-virtue-charcoal leading-relaxed mb-4">The screen is the new shackle. How to reclaim your attention span and why it matters for the development of virtue...</p>
-                    <span class="text-xs font-bold uppercase underline text-virtue-purple decoration-virtue-burgundy">Read More</span>
+                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="navigateTo('articles')" data-aos="fade-up" data-aos-delay="100">
+                    <div class="aspect-[4/3] mb-6 overflow-hidden rounded-lg bg-gray-100 relative">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Theology">
+                    </div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Theology</span>
+                        <span class="text-virtue-grey">•</span>
+                        <span class="text-xs text-virtue-grey">7 min read</span>
+                    </div>
+                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Faith as the Foundation of Moral Courage</h2>
+                    <p class="text-virtue-grey leading-relaxed mb-6">How authentic faith empowers believers to stand firm in truth, even when cultural pressures demand compromise.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read More</span>
+                        <i class="fas fa-arrow-right text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
+                    </div>
                 </article>
-                
-                 <!-- Article 3 -->
-                 <article class="border-b border-gray-100 pb-12 cursor-pointer group" data-aos="fade-up" data-aos-delay="200">
-                    <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent mb-3 block">Theology • Dec 15</span>
-                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Sacred Spaces</h2>
-                    <p class="text-virtue-charcoal leading-relaxed mb-4">How the environments we inhabit shape our soul, and how to create a sanctuary in a small apartment...</p>
-                    <span class="text-xs font-bold uppercase underline text-virtue-purple decoration-virtue-burgundy">Read More</span>
+
+                <!-- Article 3 -->
+                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="navigateTo('articles')" data-aos="fade-up" data-aos-delay="200">
+                    <div class="aspect-[4/3] mb-6 overflow-hidden rounded-lg bg-gray-100 relative">
+                        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Culture">
+                    </div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Culture</span>
+                        <span class="text-virtue-grey">•</span>
+                        <span class="text-xs text-virtue-grey">6 min read</span>
+                    </div>
+                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Beauty as a Path to Truth</h2>
+                    <p class="text-virtue-grey leading-relaxed mb-6">The role of aesthetic experience in forming virtuous character and recognizing transcendent reality.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read More</span>
+                        <i class="fas fa-arrow-right text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
+                    </div>
                 </article>
             </div>
         </div>
@@ -456,96 +665,199 @@
     <!-- PAGE 4: ABOUT -->
     <!-- ========================================= -->
     <div id="about" class="page-view">
-        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
-            <div class="bg-gray-100 relative h-[50vh] lg:h-auto order-2 lg:order-1" data-aos="fade-right">
-                <img src="https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale mix-blend-multiply" alt="Statue">
-                <div class="absolute inset-0 bg-virtue-purple/20"></div>
+        
+        <!-- About Hero -->
+        <div class="relative bg-white py-24 lg:py-40 text-center px-6 overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+                 <span class="font-serif text-[20vw] text-virtue-purple leading-none select-none">VIRTUE</span>
             </div>
-            <div class="flex flex-col justify-center p-12 lg:p-24 bg-white order-1 lg:order-2">
-                <span class="text-virtue-accent font-bold uppercase tracking-widest text-xs mb-4" data-aos="fade-up">Our Story</span>
-                <h1 class="font-serif text-5xl mb-8 text-virtue-purple" data-aos="fade-up" data-aos-delay="100">Cultivating Character</h1>
-                <p class="text-lg leading-relaxed text-virtue-charcoal mb-6" data-aos="fade-up" data-aos-delay="200">
-                    Speaking Virtue is an independent publication and lifestyle brand dedicated to the modern pursuit of excellence. 
+            
+            <div class="max-w-4xl mx-auto relative z-10" data-aos="fade-up">
+                <span class="text-virtue-accent font-bold uppercase tracking-[0.3em] text-xs mb-6 block">Our Identity</span>
+                <h1 class="font-serif text-5xl md:text-7xl text-virtue-black mb-10 leading-none">A Mission & Movement</h1>
+                <p class="text-xl md:text-2xl text-virtue-grey font-light leading-relaxed mb-12">
+                    Speaking Virtue is a gathering of hearts and minds committed to speaking truth without fear and living virtue without compromise.
                 </p>
-                <p class="text-lg leading-relaxed text-virtue-charcoal mb-10" data-aos="fade-up" data-aos-delay="300">
-                    We believe that style and substance are not enemies. We curate products and write essays that help you live a life of intention, order, and beauty.
-                </p>
-                
-                <div class="bg-virtue-light p-8 border-l-4 border-virtue-burgundy mb-10" data-aos="fade-up" data-aos-delay="400">
-                    <h3 class="font-serif text-2xl mb-4">The Manifesto</h3>
-                    <p class="italic text-gray-600">"To speak virtue is easy; to enact it is the work of a lifetime. We are committed to the practice, not just the theory."</p>
+                <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-virtue-purple/30 to-transparent mx-auto"></div>
+                <div class="mt-12">
+                     <p class="font-serif text-3xl italic text-gradient">"Authentic evangelisation begins not with condemnation, but with clarity."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Story Split (Mission & Vision) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+            <div class="relative h-[60vh] lg:h-auto order-2 lg:order-1 overflow-hidden" data-aos="fade-right">
+                <img src="https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale sepia-[.2] hover:scale-110 transition-transform duration-[3s]" alt="Statue" loading="lazy">
+                <div class="absolute inset-0 bg-virtue-deepPurple/30 mix-blend-multiply"></div>
+            </div>
+            <div class="flex flex-col justify-center p-12 lg:p-24 bg-[#F5F2EB] order-1 lg:order-2">
+                <!-- Mission -->
+                <div class="mb-16" data-aos="fade-up">
+                    <h2 class="font-serif text-4xl mb-6 text-virtue-deepPurple">Our Mission</h2>
+                    <ul class="space-y-6 text-lg text-virtue-charcoal leading-relaxed font-light">
+                        <li class="flex items-start gap-4"><span class="w-2 h-2 mt-2 bg-virtue-burgundy rounded-full flex-shrink-0"></span> To express truth faithfully, without dilution or distortion.</li>
+                        <li class="flex items-start gap-4"><span class="w-2 h-2 mt-2 bg-virtue-burgundy rounded-full flex-shrink-0"></span> To promote virtuous living as the foundation of authentic freedom.</li>
+                        <li class="flex items-start gap-4"><span class="w-2 h-2 mt-2 bg-virtue-burgundy rounded-full flex-shrink-0"></span> To embody virtue personally, recognizing that credibility flows from integrity.</li>
+                    </ul>
                 </div>
 
-                <div class="grid grid-cols-2 gap-8" data-aos="fade-up" data-aos-delay="500">
-                    <div>
-                        <span class="block text-3xl font-serif font-bold mb-2 text-virtue-burgundy">10k+</span>
-                        <span class="text-sm text-virtue-grey uppercase tracking-widest">Community</span>
+                <!-- Vision -->
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h2 class="font-serif text-4xl mb-6 text-virtue-deepPurple">Our Vision</h2>
+                    <p class="text-lg leading-relaxed text-virtue-charcoal mb-8 font-light">
+                        We envision a world renewed by words that can be trusted—words that heal rather than wound, clarify rather than confuse, and elevate rather than degrade.
+                    </p>
+                    
+                    <div class="pl-8 border-l-2 border-virtue-gold space-y-3">
+                        <p class="text-virtue-charcoal font-serif text-xl">Immersed in <span class="italic text-virtue-purple">Truth</span></p>
+                        <p class="text-virtue-charcoal font-serif text-xl">Purified with <span class="italic text-virtue-purple">Virtue</span></p>
+                        <p class="text-virtue-charcoal font-serif text-xl">Enveloped in <span class="italic text-virtue-purple">Love</span></p>
                     </div>
-                    <div>
-                        <span class="block text-3xl font-serif font-bold mb-2 text-virtue-burgundy">50+</span>
-                        <span class="text-sm text-virtue-grey uppercase tracking-widest">Articles</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Core Values Grid -->
+        <div class="bg-virtue-deepPurple text-white py-32 relative overflow-hidden">
+             <!-- Background radial -->
+             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-virtue-purple rounded-full blur-[150px] opacity-30"></div>
+
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="text-center mb-20" data-aos="fade-up">
+                    <h3 class="font-serif text-4xl md:text-5xl">Our Core Values</h3>
+                    <p class="text-virtue-gold uppercase tracking-[0.2em] text-xs font-bold mt-4">The Foundation of Our Voice</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <!-- Value 1 -->
+                    <div class="p-8 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-virtue-gold/50 transition-all duration-500 rounded-lg text-center group" data-aos="fade-up" data-aos-delay="0">
+                        <div class="text-3xl text-white/80 group-hover:text-virtue-gold transition-colors mb-6"><i class="fas fa-comment-dots"></i></div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest mb-3">Truthfulness</h4>
+                        <p class="text-xs text-white/50 leading-relaxed group-hover:text-white/80 transition-colors">Speaking honestly, even when silence is easier.</p>
                     </div>
+                    <!-- Value 2 -->
+                    <div class="p-8 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-virtue-gold/50 transition-all duration-500 rounded-lg text-center group" data-aos="fade-up" data-aos-delay="100">
+                        <div class="text-3xl text-white/80 group-hover:text-virtue-gold transition-colors mb-6"><i class="fas fa-eye"></i></div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest mb-3">Realism</h4>
+                        <p class="text-xs text-white/50 leading-relaxed group-hover:text-white/80 transition-colors">Addressing life as it is, without idealism or despair.</p>
+                    </div>
+                    <!-- Value 3 -->
+                    <div class="p-8 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-virtue-gold/50 transition-all duration-500 rounded-lg text-center group" data-aos="fade-up" data-aos-delay="200">
+                        <div class="text-3xl text-white/80 group-hover:text-virtue-gold transition-colors mb-6"><i class="fas fa-book-bible"></i></div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest mb-3">Undiluted</h4>
+                        <p class="text-xs text-white/50 leading-relaxed group-hover:text-white/80 transition-colors">Upholding Godly principles in their fullness.</p>
+                    </div>
+                    <!-- Value 4 -->
+                    <div class="p-8 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-virtue-gold/50 transition-all duration-500 rounded-lg text-center group" data-aos="fade-up" data-aos-delay="300">
+                        <div class="text-3xl text-white/80 group-hover:text-virtue-gold transition-colors mb-6"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest mb-3">Trust</h4>
+                        <p class="text-xs text-white/50 leading-relaxed group-hover:text-white/80 transition-colors">Offering words that form, guide, and endure.</p>
+                    </div>
+                      <!-- Value 5 -->
+                      <div class="p-8 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-virtue-gold/50 transition-all duration-500 rounded-lg text-center group" data-aos="fade-up" data-aos-delay="400">
+                        <div class="text-3xl text-white/80 group-hover:text-virtue-gold transition-colors mb-6"><i class="fas fa-scale-balanced"></i></div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest mb-3">Honesty</h4>
+                        <p class="text-xs text-white/50 leading-relaxed group-hover:text-white/80 transition-colors">Integrity of intention, message, and witness.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Team / Curator (Restored Original Layout) -->
+        <div class="py-24 bg-white max-w-5xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="w-full md:w-1/3 aspect-[3/4] bg-gray-200 relative overflow-hidden" data-aos="fade-right">
+                    <img src="WhatsApp Image 2025-12-31 at 16.25.16.jpeg" class="w-full h-full object-cover grayscale lazy-loading" alt="Faithful Witness" loading="lazy">
+                </div>
+                <div class="w-full md:w-2/3" data-aos="fade-left">
+                    <span class="text-virtue-accent font-bold uppercase tracking-widest text-xs mb-2 block">Our Witness</span>
+                    <h3 class="font-serif text-4xl mb-6 text-virtue-black">Faithful Witness</h3>
+                    <p class="text-virtue-charcoal mb-6 leading-relaxed">
+                        We reject both harsh rigidity and sentimental compromise. Truth must be spoken clearly, faithfully, and lovingly. Our goal is to form virtuous persons capable of moral courage, spiritual depth, and genuine love.
+                    </p>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png" class="h-12 opacity-50" alt="Signature">
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="bg-[#F9F8F6] py-32 border-t border-gray-200">
+            <div class="max-w-3xl mx-auto px-6 text-center">
+                <h3 class="font-serif text-4xl mb-6 text-virtue-black">Send a Dispatch</h3>
+                <p class="text-virtue-grey mb-12 font-light text-lg">
+                    For inquiries, collaborations, or philosophical disputes.
+                </p>
+                <a href="mailto:hello@speakingvirtue.com" class="text-3xl md:text-5xl font-serif text-virtue-purple hover:text-virtue-burgundy transition-all border-b-2 border-virtue-purple/20 pb-2 hover:border-virtue-burgundy">hello@speakingvirtue.com</a>
+                <div class="mt-16 flex justify-center gap-10 text-2xl text-virtue-grey/60">
+                    <i class="fab fa-instagram hover:text-virtue-purple cursor-pointer transition-colors transform hover:-translate-y-1"></i>
+                    <i class="fab fa-twitter hover:text-virtue-purple cursor-pointer transition-colors transform hover:-translate-y-1"></i>
+                    <i class="fab fa-linkedin hover:text-virtue-purple cursor-pointer transition-colors transform hover:-translate-y-1"></i>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ========================================= -->
-    <!-- PAGE 5: CART (Detailed) -->
+    <!-- PAGE 5: CART -->
     <!-- ========================================= -->
     <div id="cart" class="page-view">
         <div class="max-w-6xl mx-auto px-6 py-20 min-h-screen">
-            <h1 class="font-serif text-5xl mb-12 text-virtue-purple pt-10">Shopping Cart</h1>
+            <h1 class="font-serif text-5xl mb-12 text-virtue-deepPurple pt-10">Shopping Cart</h1>
 
             <!-- Cart Table -->
             <div class="flex flex-col lg:flex-row gap-16">
                 
                 <!-- Items List -->
                 <div class="flex-1">
-                    <!-- Empty State (Default) -->
-                    <div id="empty-cart-msg" class="text-center py-32 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50">
-                        <i class="fas fa-shopping-basket text-4xl text-gray-300 mb-4"></i>
-                        <p class="text-virtue-grey mb-6 text-lg">Your cart is currently empty.</p>
-                        <button onclick="navigateTo('shop')" class="px-8 py-3 bg-virtue-purple text-white text-xs font-bold uppercase tracking-widest hover:bg-virtue-black transition-colors rounded-sm">
+                    <!-- Empty State -->
+                    <div id="empty-cart-msg" class="text-center py-40 border border-dashed border-gray-300 rounded-lg bg-white/50 backdrop-blur-sm">
+                        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
+                            <i class="fas fa-shopping-basket text-3xl"></i>
+                        </div>
+                        <p class="text-virtue-charcoal mb-8 text-xl font-serif">Your cart is currently empty.</p>
+                        <button onclick="navigateTo('shop')" class="px-10 py-4 bg-virtue-black text-white text-xs font-bold uppercase tracking-widest hover:bg-virtue-purple transition-colors shadow-lg rounded-sm">
                             Return to Shop
                         </button>
                     </div>
 
-                    <!-- Items will be injected here via JS -->
-                    <div id="cart-container" class="space-y-8 hidden">
+                    <!-- Items Container -->
+                    <div id="cart-container" class="space-y-6 hidden">
+                        <!-- JS Injected Items -->
                     </div>
                 </div>
 
                 <!-- Summary Panel -->
-                <div class="w-full lg:w-96 bg-white p-8 h-fit shadow-xl border-t-4 border-virtue-purple rounded-sm sticky top-24">
-                    <h3 class="font-serif text-2xl mb-8 text-virtue-black">Order Summary</h3>
+                <div class="w-full lg:w-[400px] bg-white/80 backdrop-blur-md p-10 h-fit shadow-2xl border border-white rounded-xl sticky top-32">
+                    <h3 class="font-serif text-2xl mb-8 text-virtue-black border-b border-gray-100 pb-4">Order Summary</h3>
                     
-                    <div class="flex justify-between mb-4 text-sm">
+                    <div class="flex justify-between mb-4 text-sm font-medium">
                         <span class="text-virtue-charcoal">Subtotal</span>
-                        <span id="cart-subtotal" class="font-bold font-serif text-lg">$0.00</span>
+                        <span id="cart-subtotal" class="font-bold text-lg">$0.00</span>
                     </div>
-                    <div class="flex justify-between mb-4 text-sm">
+                    <div class="flex justify-between mb-4 text-sm font-medium">
                         <span class="text-virtue-charcoal">Shipping</span>
                         <span class="text-virtue-grey italic">Calculated at checkout</span>
                     </div>
-                    <div class="flex justify-between mb-8 text-sm">
+                    <div class="flex justify-between mb-8 text-sm font-medium">
                         <span class="text-virtue-charcoal">Tax</span>
                         <span class="text-virtue-grey">—</span>
                     </div>
                     
                     <div class="border-t border-gray-200 pt-6 mb-8 flex justify-between items-end">
                         <span class="font-serif text-xl text-virtue-purple">Total</span>
-                        <span id="cart-total" class="font-serif text-3xl font-bold text-virtue-black">$0.00</span>
+                        <span id="cart-total" class="font-serif text-4xl font-bold text-virtue-black">$0.00</span>
                     </div>
 
-                    <button onclick="openCheckout()" class="w-full py-5 bg-brand-gradient text-white text-xs font-bold uppercase tracking-widest hover:bg-brand-gradient-hover transition-all shadow-lg transform hover:-translate-y-1">
+                    <button onclick="openCheckout()" class="w-full py-5 bg-virtue-deepPurple text-white text-xs font-bold uppercase tracking-widest hover:bg-virtue-burgundy transition-all shadow-lg hover:shadow-glow transform hover:-translate-y-1 rounded-sm">
                         Proceed to Checkout
                     </button>
                     
-                    <div class="flex justify-center gap-4 mt-6 opacity-50">
-                        <i class="fab fa-cc-visa text-2xl"></i>
-                        <i class="fab fa-cc-mastercard text-2xl"></i>
-                        <i class="fab fa-cc-amex text-2xl"></i>
+                    <div class="flex justify-center gap-6 mt-8 opacity-40 grayscale">
+                        <i class="fab fa-cc-visa text-3xl"></i>
+                        <i class="fab fa-cc-mastercard text-3xl"></i>
+                        <i class="fab fa-cc-amex text-3xl"></i>
                     </div>
                 </div>
             </div>
@@ -553,89 +865,87 @@
     </div>
     
     <!-- CHECKOUT MODAL -->
-    <div id="checkout-modal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckout()"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-full max-w-lg p-8 rounded shadow-2xl animate-[fadeIn_0.3s_ease-out]">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-serif text-2xl text-virtue-purple">Secure Checkout</h3>
-                <button onclick="closeCheckout()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+    <div id="checkout-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-virtue-deepPurple/60 backdrop-blur-sm transition-opacity" onclick="closeCheckout()"></div>
+        <div class="bg-white w-full max-w-lg mx-4 p-10 rounded-xl shadow-2xl animate-fade-in-up border border-white/50 relative z-10">
+            <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+                <h3 class="font-serif text-3xl text-virtue-deepPurple">Secure Checkout</h3>
+                <button onclick="closeCheckout()" class="text-gray-400 hover:text-red-500 transition-colors"><i class="fas fa-times text-xl"></i></button>
             </div>
             
-            <div class="space-y-4">
-                <div class="p-4 bg-virtue-light border border-virtue-purple/20 rounded">
-                     <p class="text-sm font-bold text-virtue-charcoal mb-1">Order Total</p>
-                     <p class="text-2xl font-serif text-virtue-purple" id="modal-total">$0.00</p>
+            <div class="space-y-6">
+                <div class="flex justify-between items-center p-4 bg-virtue-light rounded-lg border border-virtue-purple/10">
+                     <p class="text-sm font-bold text-virtue-charcoal uppercase tracking-wider">Total Due</p>
+                     <p class="text-2xl font-serif text-virtue-purple font-bold" id="modal-total">$0.00</p>
                 </div>
                 
-                <form onsubmit="event.preventDefault(); alert('Payment simulation successful! Order #SV-8291 created.'); closeCheckout();" class="space-y-4">
+                <form onsubmit="event.preventDefault(); alert('Payment simulation successful! Order #SV-8291 created.'); closeCheckout();" class="space-y-5">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email</label>
-                        <input type="email" class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-virtue-purple" required>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-virtue-grey mb-2">Email Address</label>
+                        <input type="email" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple focus:ring-1 focus:ring-virtue-purple transition-colors" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Card Details (Demo)</label>
-                        <input type="text" placeholder="0000 0000 0000 0000" class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-virtue-purple" required>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-virtue-grey mb-2">Card Details (Demo)</label>
+                        <div class="relative">
+                            <i class="far fa-credit-card absolute left-4 top-4 text-gray-400"></i>
+                            <input type="text" placeholder="0000 0000 0000 0000" class="w-full border border-gray-300 p-4 pl-12 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple focus:ring-1 focus:ring-virtue-purple transition-colors" required>
+                        </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="text" placeholder="MM/YY" class="w-full border border-gray-300 p-3 rounded" required>
-                        <input type="text" placeholder="CVC" class="w-full border border-gray-300 p-3 rounded" required>
+                        <input type="text" placeholder="MM/YY" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple transition-colors" required>
+                        <input type="text" placeholder="CVC" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple transition-colors" required>
                     </div>
-                    <button type="submit" class="w-full py-4 bg-virtue-black text-white font-bold uppercase tracking-widest hover:bg-virtue-purple transition-colors mt-4">Pay Now</button>
+                    <button type="submit" class="w-full py-5 bg-brand-gradient text-white font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-lg mt-4 rounded-sm">Pay Now</button>
                 </form>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-virtue-purple text-white py-20 relative overflow-hidden">
+    <footer class="bg-virtue-deepPurple text-white py-24 relative overflow-hidden">
         <!-- Background Pattern -->
-        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.8) 1px, transparent 0); background-size: 40px 40px;"></div>
+        <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/40 to-transparent"></div>
         
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
             <div class="col-span-1 md:col-span-2">
-                <h4 class="font-serif text-3xl mb-6">Speaking Virtue</h4>
-                <p class="text-white/70 max-w-sm font-light leading-relaxed mb-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="font-serif text-3xl font-bold tracking-tight">Speaking Virtue</span>
+                </div>
+                <p class="text-white/60 max-w-sm font-light leading-relaxed mb-8 text-lg">
                     Wisdom for the modern soul. Join us in the pursuit of the good life through discipline, faith, and character.
                 </p>
                 <div class="flex gap-4">
-                    <a href="#" aria-label="Visit our Instagram page" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-virtue-purple transition-colors"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="Visit our Twitter page" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-virtue-purple transition-colors"><i class="fab fa-twitter"></i></a>
-                    <a href="#" aria-label="Visit our YouTube channel" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-virtue-purple transition-colors"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-virtue-deepPurple transition-all duration-300"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-virtue-deepPurple transition-all duration-300"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-virtue-deepPurple transition-all duration-300"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             <div>
-                <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-virtue-accent">Explore</h5>
-                <ul class="space-y-4 text-sm text-white/70">
-                    <li><a href="#" onclick="navigateTo('shop')" class="hover:text-white transition-transform hover:translate-x-1 inline-block">Shop</a></li>
-                    <li><a href="#" onclick="navigateTo('articles')" class="hover:text-white transition-transform hover:translate-x-1 inline-block">Journal</a></li>
+                <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-virtue-gold">Explore</h5>
+                <ul class="space-y-4 text-sm text-white/60 font-light">
+                    <li><a href="#" onclick="navigateTo('shop')" class="hover:text-white transition-transform hover:translate-x-1 inline-block">Shop Collection</a></li>
+                    <li><a href="#" onclick="navigateTo('articles')" class="hover:text-white transition-transform hover:translate-x-1 inline-block">The Journal</a></li>
                     <li><a href="#" onclick="navigateTo('about')" class="hover:text-white transition-transform hover:translate-x-1 inline-block">About Us</a></li>
                 </ul>
             </div>
             <div>
-                <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-virtue-accent">Legal</h5>
-                <ul class="space-y-4 text-sm text-white/70">
+                <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-virtue-gold">Legal</h5>
+                <ul class="space-y-4 text-sm text-white/60 font-light">
                     <li><a href="#" class="hover:text-white transition-transform hover:translate-x-1 inline-block">Privacy Policy</a></li>
                     <li><a href="#" class="hover:text-white transition-transform hover:translate-x-1 inline-block">Terms of Service</a></li>
-                    <li><a href="#" class="hover:text-white transition-transform hover:translate-x-1 inline-block">Returns</a></li>
+                    <li><a href="#" class="hover:text-white transition-transform hover:translate-x-1 inline-block">Returns & Shipping</a></li>
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/10 text-center text-xs text-white/50 uppercase tracking-widest relative z-10">
+        <div class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/10 text-center text-xs text-white/40 uppercase tracking-widest relative z-10">
             &copy; 2025 Speaking Virtue. All Rights Reserved.
         </div>
     </footer>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script>
-        // Init Animation Library
-        AOS.init({
-            once: true,
-            offset: 100,
-            duration: 800,
-            easing: 'ease-out-cubic',
-        });
-
+    <script>
         // --- NAVIGATION LOGIC ---
         function navigateTo(pageId) {
             // Scroll to top
@@ -647,10 +957,10 @@
             // Simple transition logic
             pages.forEach(page => {
                 page.style.opacity = '0';
+                page.classList.remove('active');
                 setTimeout(() => {
-                   page.classList.remove('active');
-                   page.style.display = 'none';
-                }, 400);
+                    page.style.display = 'none';
+                }, 500);
             });
 
             // Fade in new
@@ -664,9 +974,19 @@
                     target.style.opacity = '1';
                     
                     // Refresh animations for the new page
-                    setTimeout(() => AOS.refresh(), 100);
+                    if (typeof AOS !== 'undefined') {
+                        setTimeout(() => AOS.refresh(), 100);
+                    }
                 }
-            }, 400);
+            }, 500);
+        }
+
+        // --- MOBILE MENU LOGIC ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
         }
 
         // --- CART LOGIC ---
@@ -674,9 +994,10 @@
 
         function showToast() {
             const toast = document.getElementById('toast');
-            toast.classList.remove('translate-y-20', 'opacity-0');
+            if (!toast) return;
+            toast.classList.remove('translate-y-24', 'opacity-0');
             setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.add('translate-y-24', 'opacity-0');
             }, 3000);
         }
 
@@ -745,25 +1066,25 @@
             cart.forEach(item => {
                 total += item.price * item.qty;
                 const div = document.createElement('div');
-                div.className = 'flex flex-col sm:flex-row gap-6 py-6 border-b border-gray-100 items-center animate-[fadeIn_0.5s_ease-out]';
+                div.className = 'flex flex-col sm:flex-row gap-6 py-6 border-b border-gray-100 items-center bg-white p-4 rounded-lg shadow-sm animate-fade-in-up';
                 div.innerHTML = `
-                    <div class="w-24 h-32 bg-gray-100 flex-shrink-0 rounded overflow-hidden">
+                    <div class="w-24 h-24 bg-gray-100 flex-shrink-0 rounded-md overflow-hidden relative">
                         ${item.img ? `<img src="${item.img}" class="w-full h-full object-cover">` : '<div class="w-full h-full flex items-center justify-center"><i class="fas fa-image text-gray-300"></i></div>'}
                     </div>
                     <div class="flex-1 w-full text-center sm:text-left">
-                        <h4 class="font-serif text-lg mb-1">${item.title}</h4>
-                        <p class="text-sm text-virtue-grey mb-4">$${item.price.toFixed(2)}</p>
+                        <h4 class="font-serif text-lg mb-1 text-virtue-deepPurple">${item.title}</h4>
+                        <p class="text-sm text-virtue-grey mb-3">$${item.price.toFixed(2)}</p>
                         <div class="flex items-center justify-center sm:justify-start gap-4">
-                            <div class="flex items-center border border-gray-200 rounded">
-                                <button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 hover:bg-gray-100 transition-colors">-</button>
-                                <span class="w-8 text-center text-sm font-bold">${item.qty}</span>
-                                <button onclick="updateQty(${item.id}, 1)" class="w-8 h-8 hover:bg-gray-100 transition-colors">+</button>
+                            <div class="flex items-center border border-gray-200 rounded-sm">
+                                <button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 hover:bg-gray-100 transition-colors text-virtue-charcoal">-</button>
+                                <span class="w-8 text-center text-sm font-bold text-virtue-charcoal">${item.qty}</span>
+                                <button onclick="updateQty(${item.id}, 1)" class="w-8 h-8 hover:bg-gray-100 transition-colors text-virtue-charcoal">+</button>
                             </div>
-                            <button onclick="removeItem(${item.id})" class="text-xs uppercase underline text-virtue-grey hover:text-red-500 transition-colors">Remove</button>
+                            <button onclick="removeItem(${item.id})" class="text-xs uppercase tracking-widest text-red-400 hover:text-red-600 transition-colors">Remove</button>
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="font-bold text-xl text-virtue-purple">$${(item.price * item.qty).toFixed(2)}</span>
+                        <span class="font-bold text-xl text-virtue-purple font-serif">$${(item.price * item.qty).toFixed(2)}</span>
                     </div>
                 `;
                 container.appendChild(div);
@@ -789,7 +1110,29 @@
         }
 
         // Init
-        navigateTo('home');
+        window.addEventListener('load', () => {
+            // Init Animation Library
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    once: true,
+                    offset: 50,
+                    duration: 1000,
+                    easing: 'ease-out-cubic',
+                });
+            }
+
+            // Hide Loading Spinner
+            const spinner = document.getElementById('loading-spinner');
+            if (spinner) {
+                spinner.style.opacity = '0';
+                setTimeout(() => {
+                    spinner.style.visibility = 'hidden';
+                }, 700);
+            }
+
+            // Initial navigation
+            navigateTo('home');
+        });
     </script>
 </body>
 </html>

@@ -252,7 +252,7 @@
                     </button>
                     
                     <!-- Mobile Hamburger -->
-                    <button class="md:hidden text-lg text-virtue-charcoal hover:text-virtue-purple transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                    <button id="hamburger-btn" class="md:hidden text-lg text-virtue-charcoal hover:text-virtue-purple transition-colors" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
@@ -988,6 +988,17 @@
                 menu.classList.toggle('hidden');
             }
         }
+
+        // Outside click to close mobile menu
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('hamburger-btn');
+            if (menu && !menu.classList.contains('hidden')) {
+                if (!menu.contains(event.target) && !btn.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            }
+        });
 
         // --- CART LOGIC ---
         let cart = [];

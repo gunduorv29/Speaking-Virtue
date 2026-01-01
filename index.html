@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speaking Virtue | The Official Site</title>
     
     <!-- Tailwind CSS -->
@@ -248,12 +248,12 @@
     <!-- NAVIGATION -->
     <nav class="fixed w-full z-50 bg-white/70 backdrop-blur-xl border-b border-virtue-purple/5 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center h-20 md:h-24">
-                
+            <div class="flex justify-between items-center h-16 sm:h-20 md:h-24">
+
                 <!-- Brand / Logo -->
-                <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3 group relative z-50">
-                    <img src="243877296_264459022244026_4682802749916432585_n.jpg" alt="Speaking Virtue Logo" class="w-10 h-10 rounded-sm shadow-md group-hover:shadow-lg transition-all object-cover">
-                    <span class="font-serif text-2xl font-bold tracking-tight text-virtue-deepPurple group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-brand-gradient transition-all duration-300">Speaking Virtue</span>
+                <a href="#" onclick="navigateTo('home')" class="flex items-center gap-2 sm:gap-3 group relative z-50">
+                    <img src="243877296_264459022244026_4682802749916432585_n.jpg" alt="Speaking Virtue Logo" class="w-8 h-8 sm:w-10 sm:h-10 rounded-sm shadow-md group-hover:shadow-lg transition-all object-cover">
+                    <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-virtue-deepPurple group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-brand-gradient transition-all duration-300">Speaking Virtue</span>
                 </a>
 
                 <!-- Desktop Menu -->
@@ -277,16 +277,16 @@
                 </div>
 
                 <!-- Right Actions -->
-                <div class="flex items-center gap-8 relative z-50">
-                    <a href="https://www.instagram.com/speaking_virtue/" target="_blank" aria-label="Instagram" class="text-lg text-virtue-charcoal hover:text-virtue-burgundy transition-all transform hover:-translate-y-1 hover:rotate-6"><i class="fab fa-instagram"></i></a>
-                    
+                <div class="flex items-center gap-4 sm:gap-8 relative z-50">
+                    <a href="https://www.instagram.com/speaking_virtue/" target="_blank" aria-label="Instagram" class="text-3xl sm:text-4xl text-virtue-charcoal hover:text-virtue-burgundy transition-all transform hover:-translate-y-1 hover:rotate-6"><i class="fab fa-instagram"></i></a>
+
                     <button onclick="navigateTo('cart')" aria-label="Cart" class="relative group transform hover:scale-105 transition-transform">
-                        <i class="fas fa-shopping-bag text-lg text-virtue-charcoal group-hover:text-virtue-purple transition-colors"></i>
+                        <i class="fas fa-shopping-bag text-3xl sm:text-4xl text-virtue-charcoal group-hover:text-virtue-purple transition-colors"></i>
                         <span id="cart-badge" class="absolute -top-2 -right-2 bg-virtue-burgundy text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full opacity-0 shadow-sm transition-all duration-300 font-bold">0</span>
                     </button>
-                    
+
                     <!-- Mobile Hamburger -->
-                    <button id="hamburger-btn" class="md:hidden text-lg text-virtue-charcoal hover:text-virtue-purple transition-colors" onclick="toggleMobileMenu()">
+                    <button id="hamburger-btn" class="md:hidden text-3xl sm:text-4xl text-virtue-charcoal hover:text-virtue-purple transition-colors" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>

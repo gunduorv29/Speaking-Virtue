@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
     <title>Speaking Virtue | The Official Site</title>
     
     <!-- Tailwind CSS -->
@@ -98,17 +98,18 @@
             min-height: 100vh;
             padding-top: 90px;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.2s ease-in-out;
+            will-change: opacity;
         }
-        
+
         .page-view.active {
             display: block;
             opacity: 1;
-            animation: fadeInPage 0.6s ease-out forwards;
+            animation: fadeInPage 0.3s ease-out forwards;
         }
 
         @keyframes fadeInPage {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -185,6 +186,39 @@
         .virtue-card.active .icon-circle {
             background-color: rgba(255,255,255,0.2) !important;
             color: #FFFFFF !important;
+        }
+
+        /* Mobile Touch Animations for Dynamic Feel */
+        @media (max-width: 768px) {
+            button, .virtue-card, .group {
+                transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+            }
+            button:active, .virtue-card:active, .group:active {
+                transform: scale(0.98);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .img-zoom {
+                transition: transform 0.3s ease-out;
+            }
+            .group:active .img-zoom {
+                transform: scale(1.05);
+            }
+            /* Add subtle pulse to key elements */
+            .pulse-mobile {
+                animation: pulseMobile 2s infinite;
+            }
+            @keyframes pulseMobile {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.8; }
+            }
+            /* Floating animation for mobile */
+            .float-mobile {
+                animation: floatMobile 4s ease-in-out infinite;
+            }
+            @keyframes floatMobile {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-5px); }
+            }
         }
     </style>
 </head>
@@ -313,10 +347,10 @@
                 </div>
 
                 <!-- Hero Image -->
-                <div class="order-1 lg:order-2 relative h-[50vh] lg:h-[70vh]" data-aos="fade-left" data-aos-duration="1200">
+                <div class="order-1 lg:order-2 relative h-[50vh] lg:h-[70vh]" data-aos="fade-left" data-aos-duration="400">
                     <div class="absolute inset-4 border border-virtue-purple/10 rounded-full animate-spin-slow"></div>
                     <div class="w-full h-full rounded-tl-[100px] rounded-br-[100px] overflow-hidden shadow-2xl relative">
-                        <img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale opacity-90 hover:scale-105 transition-transform duration-[2s]" alt="Classical Sculpture">
+                        <img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover grayscale opacity-90 hover:scale-105 transition-transform duration-[0.8s]" alt="Classical Sculpture">
                         <div class="absolute inset-0 bg-gradient-to-tr from-virtue-purple/30 to-transparent mix-blend-overlay"></div>
                     </div>
                 </div>
@@ -406,7 +440,7 @@
         </section>
 
         <!-- Parallax Quote -->
-        <section class="py-40 bg-fixed bg-cover bg-center relative group" style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
+        <section class="py-40 bg-fixed bg-cover bg-center relative group" style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80');">
             <div class="absolute inset-0 bg-virtue-deepPurple/80 transition-opacity duration-700 group-hover:opacity-70"></div>
             <div class="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
                 <i class="fas fa-quote-left text-5xl text-virtue-gold mb-10 opacity-60"></i>
@@ -445,7 +479,7 @@
                     <!-- Product 1 -->
                     <div class="group cursor-pointer" onclick="navigateTo('shop')" data-aos="fade-up" data-aos-delay="0">
                         <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
-                            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Book">
+                            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Book" loading="lazy">
                             <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
                             <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                                 <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
@@ -458,7 +492,7 @@
                     <!-- Product 2 -->
                     <div class="group cursor-pointer" onclick="navigateTo('shop')" data-aos="fade-up" data-aos-delay="100">
                         <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
-                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Journal">
+                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Journal" loading="lazy">
                             <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
                              <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                                 <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
@@ -471,7 +505,7 @@
                     <!-- Product 3 -->
                     <div class="group cursor-pointer" onclick="navigateTo('shop')" data-aos="fade-up" data-aos-delay="200">
                         <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
-                            <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Tee">
+                            <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Tee" loading="lazy">
                             <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
                              <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                                 <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
@@ -527,9 +561,9 @@
             <!-- Product Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <!-- Product 1 -->
-                <div class="group cursor-pointer" onclick="addToCart(1, 'Speaking Virtue: Vol I', 29.99, 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="0">
+                <div class="group cursor-pointer" onclick="addToCart(1, 'Speaking Virtue: Vol I', 29.99, 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=600&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="0">
                     <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
-                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Book">
+                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Book" loading="lazy">
                         <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
                         <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                             <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Add to Cart</span>
@@ -544,9 +578,9 @@
                 </div>
 
                 <!-- Product 2 -->
-                <div class="group cursor-pointer" onclick="addToCart(2, 'The Daily Stoic Journal', 24.99, 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="100">
+                <div class="group cursor-pointer" onclick="addToCart(2, 'The Daily Stoic Journal', 24.99, 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="100">
                     <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
-                        <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Journal">
+                        <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Journal" loading="lazy">
                         <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
                         <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                             <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Add to Cart</span>
@@ -561,9 +595,9 @@
                 </div>
 
                 <!-- Product 3 -->
-                <div class="group cursor-pointer" onclick="addToCart(3, 'Visual Arts Tee', 39.99, 'https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="200">
+                <div class="group cursor-pointer" onclick="addToCart(3, 'Visual Arts Tee', 39.99, 'https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=600&auto=format&fit=crop')" data-aos="fade-up" data-aos-delay="200">
                     <div class="bg-white aspect-[3/4] mb-6 overflow-hidden relative shadow-sm hover:shadow-2xl transition-all duration-700 rounded-sm">
-                        <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Tee">
+                        <img src="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover grayscale group-hover:grayscale-0 img-zoom" alt="Tee" loading="lazy">
                         <div class="absolute inset-0 bg-virtue-purple/0 group-hover:bg-virtue-purple/10 transition-colors duration-500"></div>
                          <div class="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                             <span class="bg-white text-virtue-black px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-lg">Shop Now</span>
@@ -1127,8 +1161,9 @@
                 AOS.init({
                     once: true,
                     offset: 50,
-                    duration: 1000,
+                    duration: 400,
                     easing: 'ease-out-cubic',
+                    disable: false, // Enable animations on mobile
                 });
             }
 

@@ -252,7 +252,7 @@
                     </button>
                     
                     <!-- Mobile Hamburger -->
-                    <button id="hamburger-btn" class="md:hidden text-lg text-virtue-charcoal hover:text-virtue-purple transition-colors" onclick="toggleMobileMenu()">
+                    <button class="md:hidden text-lg text-virtue-charcoal hover:text-virtue-purple transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
@@ -602,59 +602,59 @@
                 </div>
             </div>
 
-            <!-- Journals Grid -->
+            <!-- Articles Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Journal 1 -->
-                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="window.open('Beauty_Speaking Virtue.pdf', '_blank')" data-aos="fade-up" data-aos-delay="0">
+                <!-- Article 1 -->
+                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="navigateTo('articles')" data-aos="fade-up" data-aos-delay="0">
                     <div class="aspect-[4/3] mb-6 overflow-hidden rounded-lg bg-gray-100 relative">
-                        <img src="Beauty 2.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Beauty and Aesthetics">
+                        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Philosophy">
                     </div>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Journal</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Philosophy</span>
                         <span class="text-virtue-grey">•</span>
-                        <span class="text-xs text-virtue-grey">PDF Document</span>
+                        <span class="text-xs text-virtue-grey">5 min read</span>
                     </div>
-                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Beauty: Speaking Virtue</h2>
-                    <p class="text-virtue-grey leading-relaxed mb-6">An exploration of beauty as a path to truth and virtue in the Catholic tradition.</p>
+                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">The Virtue of Prudence in Modern Life</h2>
+                    <p class="text-virtue-grey leading-relaxed mb-6">Exploring how the cardinal virtue of prudence guides decision-making in an age of information overload and moral complexity.</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read PDF</span>
-                        <i class="fas fa-external-link-alt text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read More</span>
+                        <i class="fas fa-arrow-right text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </article>
 
-                <!-- Journal 2 -->
-                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="window.open('Chastity Talk.pdf', '_blank')" data-aos="fade-up" data-aos-delay="100">
+                <!-- Article 2 -->
+                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="navigateTo('articles')" data-aos="fade-up" data-aos-delay="100">
                     <div class="aspect-[4/3] mb-6 overflow-hidden rounded-lg bg-gray-100 relative">
-                        <img src="Chastity.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Chastity and Virtue">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Theology">
                     </div>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Journal</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Theology</span>
                         <span class="text-virtue-grey">•</span>
-                        <span class="text-xs text-virtue-grey">PDF Document</span>
+                        <span class="text-xs text-virtue-grey">7 min read</span>
                     </div>
-                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Chastity Talk</h2>
-                    <p class="text-virtue-grey leading-relaxed mb-6">A discussion on the virtue of chastity and its role in forming authentic love.</p>
+                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Faith as the Foundation of Moral Courage</h2>
+                    <p class="text-virtue-grey leading-relaxed mb-6">How authentic faith empowers believers to stand firm in truth, even when cultural pressures demand compromise.</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read PDF</span>
-                        <i class="fas fa-external-link-alt text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read More</span>
+                        <i class="fas fa-arrow-right text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </article>
 
-                <!-- Journal 3 -->
-                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="window.open('Hearts on Fire by Coach Joss and Coach Annie.pdf', '_blank')" data-aos="fade-up" data-aos-delay="200">
+                <!-- Article 3 -->
+                <article class="group cursor-pointer bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-virtue-purple/10 hover:border-virtue-purple/20" onclick="navigateTo('articles')" data-aos="fade-up" data-aos-delay="200">
                     <div class="aspect-[4/3] mb-6 overflow-hidden rounded-lg bg-gray-100 relative">
-                        <img src="Hearts.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Hearts on Fire">
+                        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Culture">
                     </div>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Journal</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-accent">Culture</span>
                         <span class="text-virtue-grey">•</span>
-                        <span class="text-xs text-virtue-grey">PDF Document</span>
+                        <span class="text-xs text-virtue-grey">6 min read</span>
                     </div>
-                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Hearts on Fire</h2>
-                    <p class="text-virtue-grey leading-relaxed mb-6">By Coach Joss and Coach Annie - Igniting passion for virtue and faith.</p>
+                    <h2 class="font-serif text-2xl mb-4 group-hover:text-virtue-purple transition-colors">Beauty as a Path to Truth</h2>
+                    <p class="text-virtue-grey leading-relaxed mb-6">The role of aesthetic experience in forming virtuous character and recognizing transcendent reality.</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read PDF</span>
-                        <i class="fas fa-external-link-alt text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
+                        <span class="text-xs font-bold uppercase tracking-widest text-virtue-charcoal">Read More</span>
+                        <i class="fas fa-arrow-right text-virtue-purple group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </article>
             </div>
@@ -777,7 +777,7 @@
                     <p class="text-virtue-charcoal mb-6 leading-relaxed">
                         We reject both harsh rigidity and sentimental compromise. Truth must be spoken clearly, faithfully, and lovingly. Our goal is to form virtuous persons capable of moral courage, spiritual depth, and genuine love.
                     </p>
-                    <img src="WhatsApp Image 2025-12-31 at 16.25.16.jpeg" class="h-12 opacity-50" alt="Signature">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png" class="h-12 opacity-50" alt="Signature">
                 </div>
             </div>
         </div>
@@ -988,17 +988,6 @@
                 menu.classList.toggle('hidden');
             }
         }
-
-        // Outside click to close mobile menu
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById('mobile-menu');
-            const btn = document.getElementById('hamburger-btn');
-            if (menu && !menu.classList.contains('hidden')) {
-                if (!menu.contains(event.target) && !btn.contains(event.target)) {
-                    menu.classList.add('hidden');
-                }
-            }
-        });
 
         // --- CART LOGIC ---
         let cart = [];

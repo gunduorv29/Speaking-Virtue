@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <meta name="theme-color" content="#4B2E83">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Speaking Virtue | The Official Site</title>
     
     <!-- Tailwind CSS -->
@@ -901,7 +904,7 @@
     <!-- CHECKOUT MODAL -->
     <div id="checkout-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center">
         <div class="absolute inset-0 bg-virtue-deepPurple/60 backdrop-blur-sm transition-opacity" onclick="closeCheckout()"></div>
-        <div class="bg-white w-full max-w-lg mx-4 p-10 rounded-xl shadow-2xl animate-fade-in-up border border-white/50 relative z-10">
+        <div class="checkout-modal-content bg-white w-full max-w-lg mx-4 p-10 rounded-xl shadow-2xl animate-fade-in-up border border-white/50 relative z-10 transition-transform duration-300">
             <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
                 <h3 class="font-serif text-3xl text-virtue-deepPurple">Secure Checkout</h3>
                 <button onclick="closeCheckout()" class="text-gray-400 hover:text-red-500 transition-colors"><i class="fas fa-times text-xl"></i></button>
@@ -1148,6 +1151,16 @@
                 return;
             }
             document.getElementById('checkout-modal').classList.remove('hidden');
+            // Add zoom effect on email focus
+            const emailInput = document.querySelector('#checkout-modal input[type="email"]');
+            if (emailInput) {
+                emailInput.addEventListener('focus', () => {
+                    document.querySelector('.checkout-modal-content').style.transform = 'scale(1.05)';
+                });
+                emailInput.addEventListener('blur', () => {
+                    document.querySelector('.checkout-modal-content').style.transform = 'scale(1)';
+                });
+            }
         }
 
         function closeCheckout() {

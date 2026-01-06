@@ -961,23 +961,30 @@
                      <p class="text-2xl font-serif text-virtue-purple font-bold" id="modal-total">$0.00</p>
                 </div>
                 
-                <form onsubmit="event.preventDefault(); alert('Payment simulation successful! Order #SV-8291 created.'); closeCheckout();" class="space-y-5">
+                <form id="checkout-form" onsubmit="event.preventDefault(); processPayment();" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-virtue-grey mb-2">Full Name</label>
+                        <input type="text" id="customer-name" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple focus:ring-1 focus:ring-virtue-purple transition-colors" required>
+                    </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-virtue-grey mb-2">Email Address</label>
-                        <input type="email" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple focus:ring-1 focus:ring-virtue-purple transition-colors" required>
+                        <input type="email" id="customer-email" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple focus:ring-1 focus:ring-virtue-purple transition-colors" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-widest text-virtue-grey mb-2">Card Details (Demo)</label>
-                        <div class="relative">
-                            <i class="far fa-credit-card absolute left-4 top-4 text-gray-400"></i>
-                            <input type="text" placeholder="0000 0000 0000 0000" class="w-full border border-gray-300 p-4 pl-12 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple focus:ring-1 focus:ring-virtue-purple transition-colors" required>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-virtue-grey mb-2">Select Payment Method</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="cursor-pointer border border-gray-300 rounded p-4 flex items-center justify-center hover:border-virtue-purple transition-colors has-[:checked]:border-virtue-purple has-[:checked]:bg-virtue-purple/5">
+                                <input type="radio" name="payment-provider" value="paystack" class="hidden" checked>
+                                <span class="font-bold text-virtue-deepPurple">Paystack</span>
+                            </label>
+                            <label class="cursor-pointer border border-gray-300 rounded p-4 flex items-center justify-center hover:border-virtue-purple transition-colors has-[:checked]:border-virtue-purple has-[:checked]:bg-virtue-purple/5">
+                                <input type="radio" name="payment-provider" value="flutterwave" class="hidden">
+                                <span class="font-bold text-virtue-deepPurple">Flutterwave</span>
+                            </label>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" placeholder="MM/YY" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple transition-colors" required>
-                        <input type="text" placeholder="CVC" class="w-full border border-gray-300 p-4 rounded bg-gray-50 focus:bg-white focus:outline-none focus:border-virtue-purple transition-colors" required>
-                    </div>
-                    <button type="submit" class="w-full py-5 bg-brand-gradient text-white font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-lg mt-4 rounded-sm">Pay Now</button>
+                    <button type="submit" id="pay-btn" class="w-full py-5 bg-brand-gradient text-white font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-lg mt-4 rounded-sm">Pay Now</button>
+                    <div id="payment-error" class="text-red-500 text-xs text-center hidden"></div>
                 </form>
             </div>
         </div>
@@ -1247,6 +1254,64 @@
                     observer.observe(element);
                 });
             });
+        }
+
+        // --- PAYMENT PROCESSING ---
+        async function processPayment() {
+            const btn = document.getElementById('pay-btn');
+            const errorDiv = document.getElementById('payment-error');
+            const name = document.getElementById('customer-name').value;
+            const email = document.getElementById('customer-email').value;
+            const provider = document.querySelector('input[name="payment-provider"]:checked').value;
+            
+            if(cart.length === 0) return;
+
+            // Calculate total
+            const amount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            btn.disabled = true;
+            btn.innerText = 'Processing...';
+            errorDiv.classList.add('hidden');
+
+            try {
+                // 1. Create Cart Session
+                const cartResponse = await fetch('http://localhost:3001/api/cart/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cart, total: amount })
+                });
+                
+                const cartData = await cartResponse.json();
+                if (!cartData.success) throw new Error('Failed to create cart session');
+                
+                const sessionId = cartData.sessionId;
+
+                // 2. Initialize Payment
+                const endpoint = provider === 'paystack' 
+                    ? 'http://localhost:3001/api/payment/paystack/initialize'
+                    : 'http://localhost:3001/api/payment/flutterwave/initialize';
+
+                const paymentResponse = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId, email, amount, name, items: cart })
+                });
+
+                const paymentData = await paymentResponse.json();
+
+                if (paymentData.success && paymentData.paymentUrl) {
+                    window.location.href = paymentData.paymentUrl;
+                } else {
+                    throw new Error(paymentData.message || 'Payment initialization failed');
+                }
+
+            } catch (err) {
+                console.error(err);
+                errorDiv.innerText = err.message;
+                errorDiv.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerText = 'Pay Now';
+            }
         }
 
         // Init

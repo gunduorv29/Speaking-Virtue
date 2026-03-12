@@ -1035,312 +1035,260 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // --- NAVIGATION LOGIC ---
+        
+        // ─── CONFIG ──────────────────────────────────────────────────────────────
+        // Single source of truth for the backend URL.
+        // Change only this one constant when deploying.
+        const BACKEND_URL = 'http://localhost:3001';
+ 
+        // ─── NAVIGATION ──────────────────────────────────────────────────────────
         function navigateTo(pageId) {
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Fade out current
+ 
             const pages = document.querySelectorAll('.page-view');
-            
-            // Simple transition logic
             pages.forEach(page => {
                 page.style.opacity = '0';
                 page.classList.remove('active');
-                setTimeout(() => {
-                    page.style.display = 'none';
-                }, 500);
+                setTimeout(() => { page.style.display = 'none'; }, 500);
             });
-
-            // Fade in new
+ 
             setTimeout(() => {
                 const target = document.getElementById(pageId);
                 if (target) {
                     target.style.display = 'block';
-                    // Trigger reflow
-                    void target.offsetWidth; 
+                    void target.offsetWidth;
                     target.classList.add('active');
                     target.style.opacity = '1';
-                    
-                    // Refresh animations for the new page
-                    if (typeof AOS !== 'undefined') {
-                        setTimeout(() => AOS.refresh(), 100);
-                    }
+                    if (typeof AOS !== 'undefined') setTimeout(() => AOS.refresh(), 100);
                 }
             }, 500);
         }
-
-        // --- MOBILE MENU LOGIC ---
+ 
+        // ─── MOBILE MENU ─────────────────────────────────────────────────────────
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
-            if (menu) {
-                menu.classList.toggle('hidden');
-            }
+            if (menu) menu.classList.toggle('hidden');
         }
-
-        // Outside click to close mobile menu
-        document.addEventListener('click', function(event) {
+ 
+        document.addEventListener('click', function (event) {
             const menu = document.getElementById('mobile-menu');
-            const btn = document.getElementById('hamburger-btn');
+            const btn  = document.getElementById('hamburger-btn');
             if (menu && !menu.classList.contains('hidden')) {
-                if (!menu.contains(event.target) && !btn.contains(event.target)) {
+                if (!menu.contains(event.target) && btn && !btn.contains(event.target)) {
                     menu.classList.add('hidden');
                 }
             }
         });
-
-        // --- CART LOGIC ---
+ 
+        // ─── CART ────────────────────────────────────────────────────────────────
         let cart = [];
-
+ 
         function showToast() {
             const toast = document.getElementById('toast');
             if (!toast) return;
             toast.classList.remove('translate-y-24', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 3000);
+            setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
         }
-
+ 
         function addToCart(id, title, price, img) {
             const existing = cart.find(item => item.id === id);
-            if (existing) {
-                existing.qty++;
-            } else {
-                cart.push({ id, title, price, img, qty: 1 });
-            }
+            existing ? existing.qty++ : cart.push({ id, title, price, img, qty: 1 });
             updateCartUI();
             showToast();
         }
-
+ 
         function updateQty(id, change) {
             const item = cart.find(i => i.id === id);
-            if (item) {
-                item.qty += change;
-                if (item.qty <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                }
-                updateCartUI();
-            }
+            if (!item) return;
+            item.qty += change;
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            updateCartUI();
         }
-
+ 
         function removeItem(id) {
             cart = cart.filter(i => i.id !== id);
             updateCartUI();
         }
-
+ 
         function updateCartUI() {
-            // Badge
-            const count = cart.reduce((sum, item) => sum + item.qty, 0);
-            const badge = document.getElementById('cart-badge');
+            const count     = cart.reduce((s, i) => s + i.qty, 0);
+            const badge     = document.getElementById('cart-badge');
+            const container = document.getElementById('cart-container');
+            const emptyMsg  = document.getElementById('empty-cart-msg');
+            const subtotalEl   = document.getElementById('cart-subtotal');
+            const totalEl      = document.getElementById('cart-total');
+            const modalTotalEl = document.getElementById('modal-total');
+ 
             if (badge) {
                 badge.innerText = count;
                 badge.style.opacity = count > 0 ? '1' : '0';
             }
-
-            // HTML Elements
-            const container = document.getElementById('cart-container');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-            const subtotalEl = document.getElementById('cart-subtotal');
-            const totalEl = document.getElementById('cart-total');
-            const modalTotalEl = document.getElementById('modal-total');
-
-            // Safety check
+ 
             if (!container || !emptyMsg) return;
-
+ 
             if (cart.length === 0) {
                 emptyMsg.style.display = 'block';
                 container.style.display = 'none';
-                container.innerHTML = ''; 
-                if (subtotalEl) subtotalEl.innerText = '$0.00';
-                if (totalEl) totalEl.innerText = '$0.00';
+                container.innerHTML = '';
+                if (subtotalEl)   subtotalEl.innerText   = '$0.00';
+                if (totalEl)      totalEl.innerText      = '$0.00';
+                if (modalTotalEl) modalTotalEl.innerText = '$0.00';
                 return;
             }
-
-            // Cart has items
+ 
             emptyMsg.style.display = 'none';
             container.style.display = 'block';
             container.innerHTML = '';
-            
+ 
             let total = 0;
-
             cart.forEach(item => {
                 total += item.price * item.qty;
                 const div = document.createElement('div');
                 div.className = 'flex flex-col sm:flex-row gap-6 py-6 border-b border-gray-100 items-center bg-white p-4 rounded-lg shadow-sm animate-fade-in-up';
                 div.innerHTML = `
-                    <div class="w-24 h-24 bg-gray-100 flex-shrink-0 rounded-md overflow-hidden relative">
-                        ${item.img ? `<img src="${item.img}" class="w-full h-full object-cover">` : '<div class="w-full h-full flex items-center justify-center"><i class="fas fa-image text-gray-300"></i></div>'}
+                    <div class="w-24 h-24 bg-gray-100 flex-shrink-0 rounded-md overflow-hidden">
+                        ${item.img
+                            ? `<img src="${item.img}" class="w-full h-full object-cover" alt="${item.title}">`
+                            : '<div class="w-full h-full flex items-center justify-center"><i class="fas fa-image text-gray-300"></i></div>'}
                     </div>
                     <div class="flex-1 w-full text-center sm:text-left">
                         <h4 class="font-serif text-lg mb-1 text-virtue-deepPurple">${item.title}</h4>
                         <p class="text-sm text-virtue-grey mb-3">$${item.price.toFixed(2)}</p>
                         <div class="flex items-center justify-center sm:justify-start gap-4">
                             <div class="flex items-center border border-gray-200 rounded-sm">
-                                <button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 hover:bg-gray-100 transition-colors text-virtue-charcoal">-</button>
-                                <span class="w-8 text-center text-sm font-bold text-virtue-charcoal">${item.qty}</span>
-                                <button onclick="updateQty(${item.id}, 1)" class="w-8 h-8 hover:bg-gray-100 transition-colors text-virtue-charcoal">+</button>
+                                <button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 hover:bg-gray-100 transition-colors">−</button>
+                                <span class="w-8 text-center text-sm font-bold">${item.qty}</span>
+                                <button onclick="updateQty(${item.id}, 1)"  class="w-8 h-8 hover:bg-gray-100 transition-colors">+</button>
                             </div>
                             <button onclick="removeItem(${item.id})" class="text-xs uppercase tracking-widest text-red-400 hover:text-red-600 transition-colors">Remove</button>
                         </div>
                     </div>
                     <div class="text-right">
                         <span class="font-bold text-xl text-virtue-purple font-serif">$${(item.price * item.qty).toFixed(2)}</span>
-                    </div>
-                `;
+                    </div>`;
                 container.appendChild(div);
             });
-
-            const formattedTotal = '$' + total.toFixed(2);
-            if (subtotalEl) subtotalEl.innerText = formattedTotal;
-            if (totalEl) totalEl.innerText = formattedTotal;
-            if (modalTotalEl) modalTotalEl.innerText = formattedTotal;
+ 
+            const fmt = '$' + total.toFixed(2);
+            if (subtotalEl)   subtotalEl.innerText   = fmt;
+            if (totalEl)      totalEl.innerText      = fmt;
+            if (modalTotalEl) modalTotalEl.innerText = fmt;
         }
-
-        // --- CHECKOUT MODAL LOGIC ---
+ 
+        // ─── CHECKOUT MODAL ───────────────────────────────────────────────────────
         function openCheckout() {
-            if (cart.length === 0) {
-                alert("Your cart is empty.");
-                return;
-            }
+            if (cart.length === 0) { alert('Your cart is empty.'); return; }
             document.getElementById('checkout-modal').classList.remove('hidden');
-            // Add zoom effect on email focus
-            const emailInput = document.querySelector('#checkout-modal input[type="email"]');
-            if (emailInput) {
-                emailInput.addEventListener('focus', () => {
-                    document.querySelector('.checkout-modal-content').style.transform = 'scale(1.05)';
-                });
-                emailInput.addEventListener('blur', () => {
-                    document.querySelector('.checkout-modal-content').style.transform = 'scale(1)';
-                });
-            }
         }
-
+ 
         function closeCheckout() {
             document.getElementById('checkout-modal').classList.add('hidden');
-        }
-
-        // --- MOBILE SCROLL HOVER EFFECTS ---
-        function initMobileHoverEffects() {
-            // Only activate on mobile devices (screen width < 768px)
-            if (window.innerWidth >= 768) return;
-
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5 // Trigger when 50% of element is visible
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('mobile-hover');
-                    } else {
-                        entry.target.classList.remove('mobile-hover');
-                    }
-                });
-            }, observerOptions);
-
-            // Target elements for mobile hover effects
-            const targetSelectors = [
-                '.virtue-card',
-                '.group',
-                'button',
-                '.img-container'
-            ];
-
-            targetSelectors.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(element => {
-                    observer.observe(element);
-                });
-            });
-        }
-
-        // --- PAYMENT PROCESSING ---
-        async function processPayment() {
-            const btn = document.getElementById('pay-btn');
+            // Reset form state
+            const btn      = document.getElementById('pay-btn');
             const errorDiv = document.getElementById('payment-error');
-            const name = document.getElementById('customer-name').value;
-            const email = document.getElementById('customer-email').value;
-            const provider = document.querySelector('input[name="payment-provider"]:checked').value;
-            
-            if(cart.length === 0) return;
-
-            // Calculate total
-            const amount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-
-            btn.disabled = true;
-            btn.innerText = 'Processing...';
-            errorDiv.classList.add('hidden');
-
+            if (btn)      { btn.disabled = false; btn.innerText = 'Pay Now'; }
+            if (errorDiv) { errorDiv.classList.add('hidden'); errorDiv.innerText = ''; }
+        }
+ 
+        // ─── PAYMENT ─────────────────────────────────────────────────────────────
+        async function processPayment() {
+            const btn      = document.getElementById('pay-btn');
+            const errorDiv = document.getElementById('payment-error');
+            const name     = document.getElementById('customer-name').value.trim();
+            const email    = document.getElementById('customer-email').value.trim();
+            const provider = document.querySelector('input[name="payment-provider"]:checked')?.value || 'paystack';
+ 
+            if (!name || !email) {
+                showPaymentError('Please fill in your name and email address.');
+                return;
+            }
+            if (cart.length === 0) {
+                showPaymentError('Your cart is empty.');
+                return;
+            }
+ 
+            btn.disabled  = true;
+            btn.innerText = 'Processing…';
+            if (errorDiv) errorDiv.classList.add('hidden');
+ 
             try {
-                // 1. Create Cart Session
-                const cartResponse = await fetch('http://localhost:3001/api/cart/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items: cart, total: amount })
-                });
-                
-                const cartData = await cartResponse.json();
-                if (!cartData.success) throw new Error('Failed to create cart session');
-                
-                const sessionId = cartData.sessionId;
-
-                // 2. Initialize Payment
-                const endpoint = provider === 'paystack' 
-                    ? 'http://localhost:3001/api/payment/paystack/initialize'
-                    : 'http://localhost:3001/api/payment/flutterwave/initialize';
-
-                const paymentResponse = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionId, email, amount, name, items: cart })
-                });
-
-                const paymentData = await paymentResponse.json();
-
-                if (paymentData.success && paymentData.paymentUrl) {
-                    window.location.href = paymentData.paymentUrl;
-                } else {
-                    throw new Error(paymentData.message || 'Payment initialization failed');
+                // Use the SV.payment module from script.js
+                if (!window.SV || !window.SV.payment) {
+                    throw new Error('Payment module not loaded. Please refresh the page.');
                 }
-
+ 
+                const result = await window.SV.payment.initializePayment(cart, email, name, provider);
+ 
+                if (result.paymentUrl) {
+                    window.location.href = result.paymentUrl;
+                } else {
+                    throw new Error('No payment URL received from server.');
+                }
+ 
             } catch (err) {
-                console.error(err);
-                errorDiv.innerText = err.message;
-                errorDiv.classList.remove('hidden');
-                btn.disabled = false;
+                console.error('[Checkout]', err);
+                showPaymentError(err.message);
+                btn.disabled  = false;
                 btn.innerText = 'Pay Now';
             }
         }
-
-        // Init
-        window.addEventListener('load', () => {
-            // Init Animation Library
-            if (typeof AOS !== 'undefined') {
-                AOS.init({
-                    once: true,
-                    offset: 50,
-                    duration: 400,
-                    easing: 'ease-out-cubic',
-                    disable: false, // Enable animations on mobile
+ 
+        function showPaymentError(msg) {
+            const errorDiv = document.getElementById('payment-error');
+            if (!errorDiv) return;
+            errorDiv.innerText = msg;
+            errorDiv.classList.remove('hidden');
+        }
+ 
+        // ─── MOBILE SCROLL EFFECTS ────────────────────────────────────────────────
+        function initMobileHoverEffects() {
+            if (window.innerWidth >= 768) return;
+ 
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    entry.target.classList.toggle('mobile-hover', entry.isIntersecting);
                 });
+            }, { threshold: 0.5 });
+ 
+            ['.virtue-card', '.group'].forEach(sel => {
+                document.querySelectorAll(sel).forEach(el => observer.observe(el));
+            });
+        }
+ 
+        // ─── INIT ─────────────────────────────────────────────────────────────────
+        window.addEventListener('load', () => {
+            // Animation library
+            if (typeof AOS !== 'undefined') {
+                AOS.init({ once: true, offset: 50, duration: 400, easing: 'ease-out-cubic' });
             }
-
-            // Hide Loading Spinner
+ 
+            // Hide loading spinner
             const spinner = document.getElementById('loading-spinner');
             if (spinner) {
                 spinner.style.opacity = '0';
-                setTimeout(() => {
-                    spinner.style.visibility = 'hidden';
-                }, 700);
+                setTimeout(() => { spinner.style.visibility = 'hidden'; }, 700);
             }
-
-            // Initialize mobile hover effects
+ 
             initMobileHoverEffects();
-
-            // Initial navigation
             navigateTo('home');
+ 
+            // Handle redirect-back from payment gateway
+            if (window.SV && window.SV.payment) {
+                window.SV.payment.checkPaymentCallback(
+                    // success
+                    (reference, provider) => {
+                        console.log(`Payment confirmed: ${provider} / ${reference}`);
+                        cart = [];
+                        updateCartUI();
+                        closeCheckout();
+                        navigateTo('home');
+                    },
+                    // failure
+                    (reference, provider, reason) => {
+                        console.warn(`Payment failed: ${provider} / ${reference} – ${reason}`);
+                    }
+                );
+            }
         });
     </script>
 </body>
